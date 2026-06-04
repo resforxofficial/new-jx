@@ -1,0 +1,19 @@
+{
+  "name": "newjx",
+  "version": "1.0.0",
+  "description": "javascript transfile project & create own language and jx repository upgrade",
+  "main": "",
+  "scripts": {
+    "test": ""
+  },
+  "keywords": [
+    "javascript",
+    "typescript"
+  ],
+  "author": "resforxofficial",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
