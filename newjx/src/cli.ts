@@ -1,5 +1,5 @@
 import fs from "fs";
-import { tokenize } from "./lexer/lexer";
+import { tokenize } from "./lexer/read_idfnum";
 import { Parser } from "./parser/Parser";
 
 const inputPath = process.argv[2];
