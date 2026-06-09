@@ -1,13 +1,12 @@
-import fs from "fs";
-// import { tokenize } from "./lexer/read_idfnum";
-// import { Parser } from "./parser/Parser";
+import fs from 'fs';
+import { Parser } from './parser/parser';
+import { tokenize } from './lexer/main';
 
 const inputPath = process.argv[2];
+const data = fs.readFileSync(inputPath, { encoding: "utf-8" });
 
-const raw = fs.readFileSync(inputPath, "utf-8");
+const token = tokenize(data);
+const parser = new Parser(token);
+const ast = parser.parse();
 
-// const tokens = tokenize(raw);
-
-// const parser = new Parser(tokens);
-
-// console.log(parser.peek());
+console.dir(ast, { depth: null });
