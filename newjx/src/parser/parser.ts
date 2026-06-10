@@ -1,13 +1,16 @@
-import { Token, TokenType } from '../lexer/tokens';
-import { parseVariable } from './parsevariable';
-import { parseExpression } from './util/parseexpression';
-import { parseFactor } from './util/parsefactor';
-import { parsePrimary } from './util/parseprimary';
-import { parseTerm } from './util/parseterm';
+import { Token, TokenType } from "../lexer/tokens";
+import {
+    parseComparison,
+    parseExpression,
+    parseFactor,
+    parsePrimary,
+    parseTerm,
+    parseVariable,
+} from "./default";
 
 export class Parser {
     private current = 0;
-    constructor (private readonly token: Token[]) {}
+    constructor(private readonly token: Token[]) { }
 
     peek() {
         return this.token[this.current];
@@ -24,10 +27,14 @@ export class Parser {
             throw new Error("예상한 토큰이 존재하지 않습니다.");
         }
         if (token.type !== type) {
-            throw new Error(`${type} 토큰이 필요하지만 ${token.type}을(를) 발견했습니다.`);
+            throw new Error(
+                `${type} 토큰이 필요하지만 ${token.type}을(를) 발견했습니다.`,
+            );
         }
         if (value !== undefined && token.value !== value) {
-            throw new Error(`"${value}"가 필요하지만 "${token.value}"을(를) 발견했습니다.`);
+            throw new Error(
+                `"${value}"가 필요하지만 "${token.value}"을(를) 발견했습니다.`,
+            );
         }
 
         return this.next();
@@ -45,13 +52,16 @@ export class Parser {
     isAtEnd(): boolean {
         return this.current >= this.token.length;
     }
-    match() {}
+    match() { }
     parseStatement() {
         const token = this.peek();
         if (!token) {
             throw new Error("예상하지 못한 EOF입니다.");
         }
-        if (token.type === "Keyword" && (token.value === "mut" || token.value === "immut")) {
+        if (
+            token.type === "Keyword" &&
+            (token.value === "mut" || token.value === "immut")
+        ) {
             return parseVariable(this);
         }
 
@@ -72,5 +82,9 @@ export class Parser {
 
     parseFactor() {
         return parseFactor(this);
+    }
+
+    parseComparison() {
+        return parseComparison(this);
     }
 }
