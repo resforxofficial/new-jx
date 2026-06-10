@@ -66,6 +66,10 @@ export class Parser {
             return parseVariable(this);
         }
 
+        if (token.type === "Identifier") {
+            return ...;
+        }
+
         throw new Error(`알 수 없는 문장입니다: ${token.value}`);
     }
 

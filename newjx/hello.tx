@@ -1,1 +1,1 @@
-mut bool a = 10 <= 20;
+mut bool a = 10 == 20;

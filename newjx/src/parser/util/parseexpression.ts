@@ -1,7 +1,7 @@
 import { ExpressionNode } from '../../ast/node';
 import type { Parser } from '../parser';
-import { parseComparison } from './parsecomparison';
+import { parseEquality } from './parserequality';
 
 export function parseExpression(parser: Parser): ExpressionNode {
-    return parseComparison(parser);
+    return parseEquality(parser);
 }
