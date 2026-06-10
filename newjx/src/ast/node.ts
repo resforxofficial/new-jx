@@ -18,10 +18,16 @@ export interface VariableDeclarationNode {
 
 export type ExpressionNode =
     | LiteralNode
-    | IdentifierNode;
+    | IdentifierNode
+    | BinaryExpressionNode;
 
-export type StatementNode =
-    | VariableDeclarationNode;
+export type StatementNode = VariableDeclarationNode;
 
-export type ASTNode =
-    | StatementNode;
+export type ASTNode = StatementNode;
+
+export interface BinaryExpressionNode {
+    type: "BinaryExpression";
+    operator: string;
+    left: ExpressionNode;
+    right: ExpressionNode;
+}

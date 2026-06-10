@@ -1,6 +1,9 @@
 import { Token, TokenType } from '../lexer/tokens';
 import { parseVariable } from './parsevariable';
 import { parseExpression } from './util/parseexpression';
+import { parseFactor } from './util/parsefactor';
+import { parsePrimary } from './util/parseprimary';
+import { parseTerm } from './util/parseterm';
 
 export class Parser {
     private current = 0;
@@ -57,5 +60,17 @@ export class Parser {
 
     parseExpression() {
         return parseExpression(this);
+    }
+
+    parsePrimary() {
+        return parsePrimary(this);
+    }
+
+    parseTerm() {
+        return parseTerm(this);
+    }
+
+    parseFactor() {
+        return parseFactor(this);
     }
 }
