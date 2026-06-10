@@ -1,5 +1,6 @@
 import { Token, TokenType } from "../lexer/tokens";
 import {
+    parseAssignment,
     parseComparison,
     parseEquality,
     parseExpression,
@@ -67,7 +68,7 @@ export class Parser {
         }
 
         if (token.type === "Identifier") {
-            return ...;
+            return parseAssignment(this);
         }
 
         throw new Error(`알 수 없는 문장입니다: ${token.value}`);
