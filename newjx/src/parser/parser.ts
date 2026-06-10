@@ -1,6 +1,7 @@
 import { Token, TokenType } from "../lexer/tokens";
 import {
     parseComparison,
+    parseEquality,
     parseExpression,
     parseFactor,
     parsePrimary,
@@ -86,5 +87,9 @@ export class Parser {
 
     parseComparison() {
         return parseComparison(this);
+    }
+
+    parseEquality() {
+        return parseEquality(this);
     }
 }
