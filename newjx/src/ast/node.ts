@@ -23,7 +23,7 @@ export type ExpressionNode =
 
 export type StatementNode = VariableDeclarationNode;
 
-export type ASTNode = StatementNode | AssignmentNode;
+export type ASTNode = StatementNode | AssignmentNode | OutputStatementNode;
 
 export interface BinaryExpressionNode {
     type: "BinaryExpression";
@@ -36,4 +36,9 @@ export interface AssignmentNode {
     type: "Assignment";
     target: IdentifierNode;
     value: ExpressionNode;
+}
+
+export interface OutputStatementNode {
+    type: "OutputStatement";
+    expressions: ExpressionNode[];
 }

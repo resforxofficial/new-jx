@@ -7,6 +7,7 @@ import { parseTerm } from "./util/parseterm";
 import { parseEquality } from "./util/parserequality";
 
 import { parseAssignment } from "./util2/parse_assignment";
+import { parseOutput } from './util2/parse_output';
 
 export {
     parseVariable,
@@ -17,4 +18,5 @@ export {
     parseTerm,
     parseEquality,
     parseAssignment,
+    parseOutput,
 };

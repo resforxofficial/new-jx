@@ -5,6 +5,7 @@ import {
     parseEquality,
     parseExpression,
     parseFactor,
+    parseOutput,
     parsePrimary,
     parseTerm,
     parseVariable,
@@ -69,6 +70,10 @@ export class Parser {
 
         if (token.type === "Identifier") {
             return parseAssignment(this);
+        }
+
+        if (token.type === "Keyword" && token.value === "out") {
+            return parseOutput(this);
         }
 
         throw new Error(`알 수 없는 문장입니다: ${token.value}`);

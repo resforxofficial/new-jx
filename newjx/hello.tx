@@ -1,2 +1,5 @@
-mut int hp = 100;
-hp = hp + 1;
+{
+    out 1;
+    hp = hp + 1;
+    out hp;
+}
