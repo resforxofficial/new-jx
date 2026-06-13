@@ -8,6 +8,7 @@ import { parseEquality } from "./util/parserequality";
 
 import { parseAssignment } from "./util2/parse_assignment";
 import { parseOutput } from './util2/parse_output';
+import { parseBlock } from './util2/parse_block';
 
 export {
     parseVariable,
@@ -19,4 +20,5 @@ export {
     parseEquality,
     parseAssignment,
     parseOutput,
+    parseBlock,
 };
