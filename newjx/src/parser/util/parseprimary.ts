@@ -28,6 +28,11 @@ export function parsePrimary(parser: Parser): ExpressionNode {
                 type: "Identifier",
                 name: token.value
             };
+        case "ParenOpen":
+            parser.next();
+            const expression = parser.parseExpression();
+            parser.expect("ParenClose");
+            return expression;
         
         default:
             throw new Error(`예상하지 못한 토큰입니다: ${token.value}`);

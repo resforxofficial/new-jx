@@ -9,6 +9,9 @@ import {
     parsePrimary,
     parseTerm,
     parseVariable,
+    parseBlock,
+    parseIf,
+    parseWhile,
 } from "./default";
 
 export class Parser {
@@ -76,6 +79,14 @@ export class Parser {
             return parseOutput(this);
         }
 
+        if (token.type === "Keyword" && token.value === "if") {
+            return parseIf(this);
+        }
+
+        if (token.type === "Keyword" && token.value === "while") {
+            return parseWhile(this);
+        }
+
         throw new Error(`알 수 없는 문장입니다: ${token.value}`);
     }
 
@@ -101,5 +112,17 @@ export class Parser {
 
     parseEquality() {
         return parseEquality(this);
+    }
+
+    parseBlock() {
+        return parseBlock(this);
+    }
+
+    parseIf() {
+        return parseIf(this);
+    }
+
+    parseWhile() {
+        return parseWhile(this);
     }
 }

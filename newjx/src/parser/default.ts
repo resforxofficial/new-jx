@@ -9,6 +9,8 @@ import { parseEquality } from "./util/parserequality";
 import { parseAssignment } from "./util2/parse_assignment";
 import { parseOutput } from './util2/parse_output';
 import { parseBlock } from './util2/parse_block';
+import { parseIf } from './util2/parseif';
+import { parseWhile } from './util2/parse_while';
 
 export {
     parseVariable,
@@ -21,4 +23,6 @@ export {
     parseAssignment,
     parseOutput,
     parseBlock,
+    parseIf,
+    parseWhile,
 };

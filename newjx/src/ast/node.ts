@@ -27,7 +27,9 @@ export type ASTNode =
     | StatementNode
     | AssignmentNode
     | OutputStatementNode
-    | IfStatementNode;
+    | IfStatementNode
+    | WhileStatementNode
+    | ForStatementNode;
 
 export interface BinaryExpressionNode {
     type: "BinaryExpression";
@@ -52,4 +54,19 @@ export interface IfStatementNode {
     test: ExpressionNode;
     consequent: ASTNode[];
     alternate?: ASTNode[];
+}
+
+export interface WhileStatementNode {
+    type: "WhileStatement";
+    test: ExpressionNode;
+    body: ASTNode[];
+}
+
+export interface ForStatementNode {
+    type: "ForStatement";
+    init: VariableDeclarationNode;
+    test: ExpressionNode;
+    updateOperator: "+" | "-";
+    iteratorName: string;
+    body: ASTNode[];
 }

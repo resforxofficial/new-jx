@@ -1,5 +1,7 @@
-{
-    out 1;
-    hp = hp + 1;
-    out hp;
+while (a > 1) {
+    out a;
+}
+
+while (true) {
+    out "true", 1;
 }
