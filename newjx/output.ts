@@ -1,3 +1,6 @@
 let a: number = 10;
-let b = 20;
-let c: number = a + b;
+if (a > 5) {
+console.log(a);
+} else {
+console.log(2);
+}
