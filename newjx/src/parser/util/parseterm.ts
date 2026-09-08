@@ -1,9 +1,13 @@
-import { Parser } from '../parser';
+import { Parser } from "../parser";
 
-export function parseTerm(parser: Parser) {
+export function parseTerm(parser: Parser, stopat = false) {
     let left = parser.parseFactor();
     while (true) {
         const token = parser.peek();
+        if (stopat && token && (token.value === "+" || token.value === "-") && parser.peek(1)?.type === "ParenClose") {
+            break;
+        }
+
         if (!token || token.type !== "Operator" || (token.value !== "+" && token.value !== "-")) {
             break;
         }

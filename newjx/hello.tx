@@ -1,7 +1,3 @@
-while (a > 1) {
-    out a;
-}
-
-while (true) {
-    out "true", 1;
-}
+mut int a = 10;
+mut b = 20;
+mut int c = a + b;

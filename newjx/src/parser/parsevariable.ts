@@ -3,17 +3,24 @@ import { VariableDeclarationNode } from '../ast/node';
 
 export function parseVariable(parser: Parser): VariableDeclarationNode {
     const keyword = parser.expect("Keyword");
-    const type = parser.expect("Type");
+
+    let varType: string | undefined;
+
+    if (parser.peek().type === "Type") {
+        varType = parser.next().value;
+    }
+
     const name = parser.expect("Identifier");
 
     parser.expect("Operator", "=");
     const value = parser.parseExpression();
 
     parser.expect("Punctuation", ";");
+
     return {
         type: "VariableDeclaration",
         mutable: keyword.value === "mut",
-        varType: type.value,
+        varType,
         name: name.value,
         value,
     };

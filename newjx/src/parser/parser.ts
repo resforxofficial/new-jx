@@ -12,14 +12,15 @@ import {
     parseBlock,
     parseIf,
     parseWhile,
+    parseFor,
 } from "./default";
 
 export class Parser {
     private current = 0;
     constructor(private readonly token: Token[]) { }
 
-    peek() {
-        return this.token[this.current];
+    peek(offset = 0) {
+        return this.token[this.current + offset];
     }
 
     next() {
@@ -87,6 +88,10 @@ export class Parser {
             return parseWhile(this);
         }
 
+        if (token.type === "Keyword" && token.value === "for") {
+            return parseFor(this);
+        }
+
         throw new Error(`알 수 없는 문장입니다: ${token.value}`);
     }
 
@@ -98,8 +103,8 @@ export class Parser {
         return parsePrimary(this);
     }
 
-    parseTerm() {
-        return parseTerm(this);
+    parseTerm(stopat = false) {
+        return parseTerm(this, stopat);
     }
 
     parseFactor() {
@@ -124,5 +129,9 @@ export class Parser {
 
     parseWhile() {
         return parseWhile(this);
+    }
+
+    parseFor() {
+        return parseFor(this);
     }
 }
