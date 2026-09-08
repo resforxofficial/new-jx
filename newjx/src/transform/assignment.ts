@@ -1,5 +1,5 @@
-import type { AssignmentNode } from '../ast/node';
-import { transformExpression } from './expressions';
+import type { AssignmentNode } from "../ast/node";
+import { transformExpression } from "./expressions";
 
 export function transformAssignment(node: AssignmentNode): string {
     const target = node.target.name;

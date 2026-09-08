@@ -3,7 +3,9 @@ import type { ASTNode } from "../ast/node";
 import { transformVariable } from "./variable";
 import { transformOutput } from "./output";
 import { transformAssignment } from "./assignment";
-import { transformIf } from './trif';
+import { transformIf } from "./trif";
+import { transformWhile } from "./while";
+import { transformFor } from './trfor';
 
 export function transformNode(node: ASTNode): string {
     switch (node.type) {
@@ -19,7 +21,14 @@ export function transformNode(node: ASTNode): string {
         case "IfStatement":
             return transformIf(node);
 
+        case "WhileStatement":
+            return transformWhile(node);
+
+        case "ForStatement":
+            return transformFor(node);
+
         default:
-            throw new Error(`지원하지 않는 AST 노드입니다: ${node.type}`);
+            const _exhaustiveCheck: never = node;
+            throw new Error(`Unhandled node type: ${(node as any).type}`);
     }
 }

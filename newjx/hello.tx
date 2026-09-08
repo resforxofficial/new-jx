@@ -1,9 +1,3 @@
-mut int a = 10;
-
-if (a > 5) {
-    out a;
-}
-
-else {
-    out 2;
+for (int i = 0: i < 5+) {
+    out i;
 }
