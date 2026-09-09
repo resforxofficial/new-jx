@@ -18,15 +18,19 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
 
             throw new Error("알 수 없는 리터럴 타입입니다.");
 
-        case "Identifier": {
-            const type = scope.declared.get(node.name);
+        case "Identifier":
+            let currentScope: Scope | undefined = scope;
 
-            if (!type) {
-                throw new Error(`선언되지 않은 변수입니다: ${node.name}`);
+            while (currentScope) {
+                const type = currentScope.declared.get(node.name);
+                if (type) {
+                    return type;
+                }
+
+                currentScope = currentScope.parent;
             }
 
-            return type;
-        }
+            throw new Error(`선언되지 않은 변수입니다: ${node.name}`);
 
         case "BinaryExpression":
             return getBinaryExpressionType(node, scope);

@@ -26,6 +26,7 @@ export type StatementNode = VariableDeclarationNode;
 export type ASTNode =
     | StatementNode
     | AssignmentNode
+    | InputExpressionNode
     | OutputStatementNode
     | IfStatementNode
     | WhileStatementNode
@@ -69,4 +70,9 @@ export interface ForStatementNode {
     updateOperator: "+" | "-";
     iteratorName: string;
     body: ASTNode[];
+}
+
+export interface InputExpressionNode {
+    type: "InputExpression";
+    promptText: string;
 }

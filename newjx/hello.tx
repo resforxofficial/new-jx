@@ -1,0 +1,9 @@
+mut int a = 4;
+
+if (a > 5) {
+    mut int b = 20;
+    out b;
+} else {
+    out b;
+}
+
