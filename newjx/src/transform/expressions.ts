@@ -14,6 +14,6 @@ export function transformExpression(node: ExpressionNode): string {
             return `${transformExpression(node.left)} ${node.operator} ${transformExpression(node.right)}`;
         
         case "InputExpression":
-            return `prompt("${node.promptText}")`;
+            return `input("${node.promptText}")`;
     }
 }

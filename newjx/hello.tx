@@ -1,1 +1,2 @@
 mut a = input "a: ";
+out a, a+"a", a+1;

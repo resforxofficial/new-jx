@@ -1,6 +1,5 @@
 import type { VariableDeclarationNode } from "../ast/node";
 import type { TransformScope } from "./especial/context";
-
 import { transformExpression } from "./expressions";
 
 const typeMap: Record<string, string> = {
@@ -27,7 +26,20 @@ export function transformVariable(node: VariableDeclarationNode, scope: Transfor
         }
     }
 
-    scope.declared.set(node.name, node.varType ?? "dynamic");
+    let inferredType = "dynamic";
+
+    if (node.varType) {
+        inferredType = node.varType;
+    } else if (node.value?.type === "Literal") {
+        if (typeof node.value.value === "number") {
+            inferredType = "int";
+        } else if (typeof node.value.value === "string") {
+            inferredType = "str";
+        } else if (typeof node.value.value === "boolean") {
+            inferredType = "bool";
+        }
+    }
+    scope.declared.set(node.name, inferredType);
 
     if (node.varType) {
         const type = typeMap[node.varType];
@@ -37,6 +49,10 @@ export function transformVariable(node: VariableDeclarationNode, scope: Transfor
         }
 
         return `${keyword} ${node.name}: ${type} = ${value};`;
+    }
+
+    if (inferredType === "dynamic") {
+        return `${keyword} ${node.name}: any = ${value};`;
     }
 
     return `${keyword} ${node.name} = ${value};`;
