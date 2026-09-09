@@ -1,4 +1,5 @@
 import type { ASTNode, IfStatementNode } from "../../ast/node";
+
 import type { Parser } from "../parser";
 
 export function parseIf(parser: Parser): IfStatementNode {
@@ -10,7 +11,12 @@ export function parseIf(parser: Parser): IfStatementNode {
 
     if (parser.peek()?.type === "Keyword" && parser.peek()?.value === "else") {
         parser.next();
-        alternate = parser.parseBlock();
+
+        if (parser.peek()?.type === "Keyword" && parser.peek()?.value === "if") {
+            alternate = [parseIf(parser)];
+        } else {
+            alternate = parser.parseBlock();
+        }
     }
 
     return {

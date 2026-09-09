@@ -33,7 +33,7 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
             throw new Error(`선언되지 않은 변수입니다: ${node.name}`);
 
         case "InputExpression":
-            return "input";
+            return "dynamic";
 
         case "BinaryExpression":
             return getBinaryExpressionType(node, scope);
@@ -51,6 +51,10 @@ function getBinaryExpressionType(
         case "+":
             if (leftType === "bool" || rightType === "bool") {
                 throw new Error(`+ 연산에는 bool 타입을 사용할 수 없습니다.`);
+            }
+
+            if (leftType === "dynamic" || rightType === "dynamic") {
+                return "dynamic";
             }
 
             if (leftType === "str" || rightType === "str") {
@@ -86,7 +90,7 @@ function getBinaryExpressionType(
         case ">=":
         case "==":
         case "!=":
-            if (leftType !== rightType) {
+            if (leftType !== "dynamic" && rightType !== "dynamic" && leftType !== rightType) {
                 throw new Error(
                     `비교할 수 없는 타입입니다: ${leftType} ${node.operator} ${rightType}`,
                 );

@@ -28,6 +28,7 @@ export function validateIf(node: IfStatementNode, scope: Scope): void {
             declared: new Map(),
             mutable: new Set(),
             initialized: new Set(),
+            parent: scope,
         }
 
         for (const statement of node.alternate) {
