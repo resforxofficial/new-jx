@@ -14,11 +14,12 @@ export function validateAssignment(node: AssignmentNode, scope: Scope): void {
         throw new Error(`immut 변수에는 값을 대입할 수 없습니다: ${name}`);
     }
 
+    const isInput = node.value.type === "InputExpression";
     const actualType = getExpressionType(node.value, scope);
 
-    if (declaredType !== actualType) {
+    if (!isInput && declaredType !== actualType) {
         throw new Error(
-            `대입하는 값의 타입이 일치하지 않습니다: ${name} (${declaredType} ← ${actualType})`,
+            `대입하는 값의 타입이 일치하지 않습니다: ${name} (${declaredType} ← ${actualType})`
         );
     }
 

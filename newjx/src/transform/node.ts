@@ -6,26 +6,27 @@ import { transformAssignment } from "./assignment";
 import { transformIf } from "./trif";
 import { transformWhile } from "./while";
 import { transformFor } from './trfor';
+import type { TransformScope } from "./especial/context";
 
-export function transformNode(node: ASTNode): string {
+export function transformNode(node: ASTNode, scope: TransformScope): string {
     switch (node.type) {
         case "VariableDeclaration":
-            return transformVariable(node);
+            return transformVariable(node, scope);
 
         case "OutputStatement":
-            return transformOutput(node);
+            return transformOutput(node, scope);
 
         case "Assignment":
-            return transformAssignment(node);
+            return transformAssignment(node, scope);
 
         case "IfStatement":
-            return transformIf(node);
+            return transformIf(node, scope);
 
         case "WhileStatement":
-            return transformWhile(node);
+            return transformWhile(node, scope);
 
         case "ForStatement":
-            return transformFor(node);
+            return transformFor(node, scope);
 
         default:
             const _exhaustiveCheck: never = node;

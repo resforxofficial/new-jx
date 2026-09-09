@@ -19,6 +19,7 @@ export interface VariableDeclarationNode {
 export type ExpressionNode =
     | LiteralNode
     | IdentifierNode
+    | InputExpressionNode
     | BinaryExpressionNode;
 
 export type StatementNode = VariableDeclarationNode;
@@ -26,7 +27,6 @@ export type StatementNode = VariableDeclarationNode;
 export type ASTNode =
     | StatementNode
     | AssignmentNode
-    | InputExpressionNode
     | OutputStatementNode
     | IfStatementNode
     | WhileStatementNode

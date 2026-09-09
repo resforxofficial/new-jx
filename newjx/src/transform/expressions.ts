@@ -12,5 +12,8 @@ export function transformExpression(node: ExpressionNode): string {
 
         case "BinaryExpression":
             return `${transformExpression(node.left)} ${node.operator} ${transformExpression(node.right)}`;
+        
+        case "InputExpression":
+            return `prompt("${node.promptText}")`;
     }
 }

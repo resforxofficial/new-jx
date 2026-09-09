@@ -1,4 +1,6 @@
 import type { VariableDeclarationNode } from "../ast/node";
+import type { TransformScope } from "./especial/context";
+
 import { transformExpression } from "./expressions";
 
 const typeMap: Record<string, string> = {
@@ -7,9 +9,25 @@ const typeMap: Record<string, string> = {
     bool: "boolean",
 };
 
-export function transformVariable(node: VariableDeclarationNode): string {
+export function transformVariable(node: VariableDeclarationNode, scope: TransformScope): string {
     const keyword = node.mutable ? "let" : "const";
-    const value = node.value ? transformExpression(node.value) : "";
+    let value = node.value ? transformExpression(node.value) : "";
+
+    if (node.value?.type === "InputExpression") {
+        const prompt = `input("${node.value.promptText}")`;
+
+        if (node.varType === "int") {
+            value = `Number(${prompt})`;
+        } else if (node.varType === "bool") {
+            value = `${prompt} === "true"`;
+        } else if (node.varType === "str") {
+            value = prompt;
+        } else {
+            value = `parseInput(${prompt})`;
+        }
+    }
+
+    scope.declared.set(node.name, node.varType ?? "dynamic");
 
     if (node.varType) {
         const type = typeMap[node.varType];

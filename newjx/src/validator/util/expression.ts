@@ -32,6 +32,9 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
 
             throw new Error(`선언되지 않은 변수입니다: ${node.name}`);
 
+        case "InputExpression":
+            return "input";
+
         case "BinaryExpression":
             return getBinaryExpressionType(node, scope);
     }
