@@ -4,6 +4,7 @@ import { tokenize } from './lexer/main';
 import { transform } from './transform/maintr';
 import { spawnSync } from 'child_process';
 import path from 'path';
+import { validate } from './validator/main';
 
 const inputPath = process.argv[2];
 
@@ -12,6 +13,7 @@ const data = fs.readFileSync(inputPath, { encoding: "utf-8" });
 const token = tokenize(data);
 const parser = new Parser(token);
 const ast = parser.parse();
+validate(ast);
 
 const output = transform(ast);
 const outputPath = path.resolve('./output.ts');

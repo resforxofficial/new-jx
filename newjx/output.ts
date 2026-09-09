@@ -1,3 +1,4 @@
-for (let i = 0; i < 5; i++) {
-console.log(i);
+let a: number = 10;
+if (a > 5) {
+console.log(a + 3, a, a * a);
 }

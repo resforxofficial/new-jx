@@ -1,0 +1,42 @@
+import type { ASTNode } from "../ast/node";
+import { validateAssignment } from "./assignment";
+import type { Scope } from "./main";
+import { validateOutput } from "./output";
+import { validateIf } from "./valif";
+import { validateVariable } from "./variable";
+
+export function validateNode(node: ASTNode, scope: Scope): void {
+    switch (node.type) {
+        case "VariableDeclaration":
+            // 다음 단계에서 연결
+            validateVariable(node, scope);
+            return;
+
+        case "Assignment":
+            // 다음 단계에서 연결
+            validateAssignment(node, scope);
+            return;
+
+        case "OutputStatement":
+            validateOutput(node, scope);
+            // 다음 단계에서 연결
+            return;
+
+        case "IfStatement":
+            validateIf(node, scope);
+            // 다음 단계에서 연결
+            return;
+
+        case "WhileStatement":
+            // 다음 단계에서 연결
+            return;
+
+        case "ForStatement":
+            // 다음 단계에서 연결
+            return;
+
+        default:
+            const _exhaustiveCheck: never = node;
+            throw new Error(`Unhandled node type: ${(node as any).type}`);
+    }
+}
