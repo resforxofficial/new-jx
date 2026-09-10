@@ -12,6 +12,7 @@ import { parseBlock } from './util2/parse_block';
 import { parseIf } from './util2/parseif';
 import { parseWhile } from './util2/parse_while';
 import { parseFor } from './util2/parse_for';
+import { parseBreak } from './util2/parsebreak';
 
 export {
     parseVariable,
@@ -27,4 +28,5 @@ export {
     parseIf,
     parseWhile,
     parseFor,
+    parseBreak,
 };

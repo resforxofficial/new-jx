@@ -7,6 +7,7 @@ export const KEYWORDS = new Set([
     "while",
     "for",
     "input",
+    "break",
 ]);
 
 export const TYPES = new Set(["int", "str", "bool"]);

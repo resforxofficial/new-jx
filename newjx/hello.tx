@@ -1,9 +1,0 @@
-mut a = input "text a number: ";
-
-if (a > 10) {
-    out a;
-} else if (a == 5) {
-    out a + 1;
-} else {
-    out a + 2;
-}

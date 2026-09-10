@@ -27,6 +27,7 @@ export type StatementNode = VariableDeclarationNode;
 export type ASTNode =
     | StatementNode
     | AssignmentNode
+    | BreakStatementNode
     | OutputStatementNode
     | IfStatementNode
     | WhileStatementNode
@@ -75,4 +76,8 @@ export interface ForStatementNode {
 export interface InputExpressionNode {
     type: "InputExpression";
     promptText: string;
+}
+
+export interface BreakStatementNode {
+    type: "BreakStatement";
 }

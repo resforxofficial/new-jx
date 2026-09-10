@@ -13,6 +13,7 @@ import {
     parseIf,
     parseWhile,
     parseFor,
+    parseBreak,
 } from "./default";
 
 export class Parser {
@@ -92,6 +93,10 @@ export class Parser {
             return parseFor(this);
         }
 
+        if (token.type === "Keyword" && token.value === "break") {
+            return parseBreak(this);
+        }
+
         throw new Error(`알 수 없는 문장입니다: ${token.value}`);
     }
 
@@ -133,5 +138,9 @@ export class Parser {
 
     parseFor() {
         return parseFor(this);
+    }
+
+    parseBreak() {
+        return parseBreak(this);
     }
 }
