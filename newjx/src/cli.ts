@@ -15,6 +15,8 @@ const data = fs.readFileSync(inputPath, { encoding: "utf-8" });
 const token = tokenize(data);
 const parser = new Parser(token);
 const ast = parser.parse();
+console.dir(ast, { depth: null });
+
 validate(ast);
 
 const needsInput = hasInput(ast);
