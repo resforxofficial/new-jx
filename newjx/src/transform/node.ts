@@ -7,6 +7,7 @@ import { transformIf } from "./trif";
 import { transformWhile } from "./while";
 import { transformFor } from './trfor';
 import type { TransformScope } from "./especial/context";
+import { transformBreak } from "./break";
 
 export function transformNode(node: ASTNode, scope: TransformScope): string {
     switch (node.type) {
@@ -27,6 +28,8 @@ export function transformNode(node: ASTNode, scope: TransformScope): string {
 
         case "ForStatement":
             return transformFor(node, scope);
+        case "BreakStatement":
+            return transformBreak(node, scope);
 
         default:
             const _exhaustiveCheck: never = node;

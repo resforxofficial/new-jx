@@ -1,0 +1,9 @@
+mut a = 1;
+while (true) {
+    a = a + 1;
+
+    if (a > 6) {
+        out "finish";
+        break;
+    }
+}

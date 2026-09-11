@@ -6,6 +6,7 @@ export interface Scope {
     mutable: Set<string>;
     initialized: Set<string>;
     parent?: Scope;
+    loopDepth: number;
 }
 
 export function validate(ast: ASTNode[]): void {
@@ -13,6 +14,7 @@ export function validate(ast: ASTNode[]): void {
         declared: new Map(),
         mutable: new Set(),
         initialized: new Set(),
+        loopDepth: 0,
     };
 
     for (const node of ast) {

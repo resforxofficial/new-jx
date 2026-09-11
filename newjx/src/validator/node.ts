@@ -3,7 +3,9 @@ import { validateAssignment } from "./assignment";
 import type { Scope } from "./main";
 import { validateOutput } from "./output";
 import { validateIf } from "./valif";
+import { validateFor } from "./valifor";
 import { validateVariable } from "./variable";
+import { validateWhile } from "./while";
 
 export function validateNode(node: ASTNode, scope: Scope): void {
     switch (node.type) {
@@ -29,10 +31,15 @@ export function validateNode(node: ASTNode, scope: Scope): void {
 
         case "WhileStatement":
             // 다음 단계에서 연결
+            validateWhile(node, scope);
             return;
 
         case "ForStatement":
             // 다음 단계에서 연결
+            validateFor(node, scope);
+            return;
+
+        case "BreakStatement":
             return;
 
         default:
