@@ -1,6 +1,8 @@
 import type { ASTNode } from "../ast/node";
-import { validateAssignment } from "./assignment";
 import type { Scope } from "./main";
+import { validateAssignment } from "./assignment";
+import { validateBreak } from "./break";
+import { validateContinue } from "./continue";
 import { validateOutput } from "./output";
 import { validateIf } from "./valif";
 import { validateFor } from "./valifor";
@@ -40,7 +42,10 @@ export function validateNode(node: ASTNode, scope: Scope): void {
             return;
 
         case "BreakStatement":
-            return;
+            return validateBreak(node, scope);
+
+        case "ContinueStatement":
+            return validateContinue(node, scope);
 
         default:
             const _exhaustiveCheck: never = node;

@@ -28,6 +28,7 @@ export type ASTNode =
     | StatementNode
     | AssignmentNode
     | BreakStatementNode
+    | ContinueStatementNode
     | OutputStatementNode
     | IfStatementNode
     | WhileStatementNode
@@ -80,4 +81,8 @@ export interface InputExpressionNode {
 
 export interface BreakStatementNode {
     type: "BreakStatement";
+}
+
+export interface ContinueStatementNode {
+    type: "ContinueStatement";
 }

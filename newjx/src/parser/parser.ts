@@ -14,6 +14,7 @@ import {
     parseWhile,
     parseFor,
     parseBreak,
+    parseContinue,
 } from "./default";
 
 export class Parser {
@@ -97,6 +98,10 @@ export class Parser {
             return parseBreak(this);
         }
 
+        if (token.type === "Keyword" && token.value === "continue") {
+            return parseContinue(this);
+        }
+
         throw new Error(`알 수 없는 문장입니다: ${token.value}`);
     }
 
@@ -142,5 +147,9 @@ export class Parser {
 
     parseBreak() {
         return parseBreak(this);
+    }
+
+    parseContinue() {
+        return parseContinue(this);
     }
 }
