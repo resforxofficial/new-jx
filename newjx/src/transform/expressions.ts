@@ -15,5 +15,8 @@ export function transformExpression(node: ExpressionNode): string {
         
         case "InputExpression":
             return `input("${node.promptText}")`;
+
+        case "ArrayLiteral":
+            return `[${node.elements.map(element => transformExpression(element)).join(", ")}]`;
     }
 }

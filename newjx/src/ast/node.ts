@@ -13,7 +13,7 @@ export interface VariableDeclarationNode {
     name: string;
     mutable: boolean;
     varType?: string;
-    arrayLength?: number;
+    array?: ArrayTypeNode;
     value?: ExpressionNode;
 }
 
@@ -92,4 +92,9 @@ export interface ContinueStatementNode {
 export interface ArrayLiteralNode {
     type: "ArrayLiteral";
     elements: ExpressionNode[];
+}
+
+export interface ArrayTypeNode {
+    elementType?: string;
+    length?: number;
 }

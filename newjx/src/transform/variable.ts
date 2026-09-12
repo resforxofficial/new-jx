@@ -39,6 +39,34 @@ export function transformVariable(node: VariableDeclarationNode, scope: Transfor
             inferredType = "bool";
         }
     }
+
+    if (node.array) {
+        const elementType = node.array.elementType
+            ? typeMap[node.array.elementType]
+            : "any";
+
+        const arrayType = `${elementType ?? "any"}[]`;
+
+        scope.declared.set(
+            node.name,
+            `${node.array.elementType ?? "dynamic"}[]`,
+        );
+
+        if (node.array.length !== undefined) {
+            let result = `${keyword} ${node.name}: ${arrayType} = new Array(${node.array.length});`;
+
+            if (node.value?.type === "ArrayLiteral") {
+                node.value.elements.forEach((element, index) => {
+                    result += `\n${node.name}[${index}] = ${transformExpression(element)};`;
+                });
+            }
+
+            return result;
+        }
+
+        return `${keyword} ${node.name}: ${arrayType} = ${value};`;
+    }
+
     scope.declared.set(node.name, inferredType);
 
     if (node.varType) {
