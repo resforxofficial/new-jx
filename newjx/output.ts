@@ -1,1 +1,1 @@
-let nums: number = 1;
+let nums: number = undefined;

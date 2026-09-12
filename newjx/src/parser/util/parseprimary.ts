@@ -46,6 +46,9 @@ export function parsePrimary(parser: Parser): ExpressionNode {
                 type: "InputExpression",
                 promptText: prompt.value,
             };
+
+        case "BraceOpen":
+            return parser.parseArray();
         
         default:
             throw new Error(`예상하지 못한 토큰입니다: ${token.value}`);

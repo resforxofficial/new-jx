@@ -12,9 +12,26 @@ export function validateVariable(node: VariableDeclarationNode, scope: Scope): v
     }
 
     const isInput = node.value.type === "InputExpression";
+    const isArray = node.value.type === "ArrayLiteral";
     const actualType = getExpressionType(node.value, scope);
 
-    if (!isInput && node.varType && node.varType !== actualType) {
+    if (node.value.type === "ArrayLiteral" && node.varType && node.arrayLength !== undefined) {
+        if (node.value.elements.length !== node.arrayLength) {
+            throw new Error(
+                `배열 길이가 일치하지 않습니다: ${node.name} (${node.arrayLength} ← ${node.value.elements.length})`
+            );
+        }
+
+        for (const element of node.value.elements) {
+            const elementType = getExpressionType(element, scope);
+
+            if (elementType !== node.varType) {
+                throw new Error(
+                    `배열 요소의 타입이 일치하지 않습니다: ${node.name} (${node.varType} ← ${elementType})`
+                );
+            }
+        }
+    } else if (!isInput && node.varType && node.varType !== actualType) {
         throw new Error(
             `변수 타입이 일치하지 않습니다: ${node.name} (${node.varType} ← ${actualType})`
         );

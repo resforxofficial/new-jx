@@ -16,6 +16,7 @@ import {
     parseBreak,
     parseContinue,
 } from "./default";
+import { parseArrayLiteral } from "./util3/parse_array";
 
 export class Parser {
     private current = 0;
@@ -151,5 +152,9 @@ export class Parser {
 
     parseContinue() {
         return parseContinue(this);
+    }
+
+    parseArray() {
+        return parseArrayLiteral(this);
     }
 }

@@ -37,6 +37,22 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
 
         case "BinaryExpression":
             return getBinaryExpressionType(node, scope);
+
+        case "ArrayLiteral":
+            if (node.elements.length === 0) {
+                return "array";
+            }
+
+            const firstType = getExpressionType(node.elements[0], scope);
+            for (const element of node.elements) {
+                const elementType = getExpressionType(element, scope);
+
+                if (elementType !== firstType) {
+                    throw new Error(`배열 요소의 타입이 일치하지 않습니다: ${firstType} ← ${elementType}`);
+                }
+            }
+
+            return "array";
     }
 }
 

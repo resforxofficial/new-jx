@@ -14,6 +14,7 @@ import { parseWhile } from './util2/parse_while';
 import { parseFor } from './util2/parse_for';
 import { parseBreak } from './util2/parsebreak';
 import { parseContinue } from './util2/parse_continue';
+import { parseArrayLiteral } from './util3/parse_array';
 
 export {
     parseVariable,
