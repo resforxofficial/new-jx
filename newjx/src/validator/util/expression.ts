@@ -67,6 +67,26 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
             }
 
             return targetType.slice(0, -2);
+
+        case "TernaryExpression":
+            const conditionType = getExpressionType(node.condition, scope);
+
+            if (conditionType !== "bool" && conditionType !== "dynamic") {
+                throw new Error(`삼항 연산자의 조건은 bool 타입이어야 합니다: ${conditionType}`);
+            }
+
+            const consequentType = getExpressionType(node.consequent, scope);
+            const alternateType = getExpressionType(node.alternate, scope);
+
+            if (consequentType === "dynamic" || alternateType === "dynamic") {
+                return "dynamic";
+            }
+
+            if (consequentType !== alternateType) {
+                throw new Error(`삼항 연산자의 결과 타입이 일치하지 않습니다: ${consequentType} ← ${alternateType}`);
+            }
+
+            return consequentType;
     }
 }
 

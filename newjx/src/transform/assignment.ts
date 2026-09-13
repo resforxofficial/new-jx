@@ -35,5 +35,5 @@ export function transformAssignment(node: AssignmentNode, scope: TransformScope)
         value = transformExpression(node.value);
     }
 
-    return `${target} = ${value};`;
+    return `${target} ${node.operator} ${value};`;
 }

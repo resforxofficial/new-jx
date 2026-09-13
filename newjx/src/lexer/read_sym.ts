@@ -14,6 +14,7 @@ const SYMBOLS: Record<string, Token["type"]> = {
     ":": "Punctuation",
     ".": "Punctuation",
     ",": "Punctuation",
+    "?": "Punctuation",
 };
 
 export function readSymbol(

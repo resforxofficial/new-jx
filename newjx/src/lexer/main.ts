@@ -16,6 +16,31 @@ export function tokenize(source: string): Token[] {
             continue;
         }
 
+        if (char === "/" && source[current + 1] === "/") {
+            current += 2;
+
+            while (current < source.length && source[current] !== "\n") {
+                current++;
+            }
+
+            continue;
+        }
+
+        if (char === "/" && source[current + 1] === "*") {
+            current += 2;
+
+            while (current < source.length && !(source[current] === "*" && source[current + 1] === "/")) {
+                current++;
+            }
+
+            if (current >= source.length) {
+                throw new Error("닫히지 않은 블록 주석입니다.");
+            }
+
+            current += 2;
+            continue;
+        }
+
         if (/[a-zA-Z_]/.test(char)) {
             current = readIdentifier(source, tokens, current);
             continue;
@@ -36,7 +61,7 @@ export function tokenize(source: string): Token[] {
             continue;
         }
 
-        if ("()[]{};:,.".includes(char)) {
+        if ("()[]{};:,.?".includes(char)) {
             current = readSymbol(source, tokens, current);
             continue;
         }

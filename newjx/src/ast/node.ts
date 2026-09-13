@@ -21,6 +21,7 @@ export type ExpressionNode =
     | LiteralNode
     | IdentifierNode
     | InputExpressionNode
+    | TernaryExpressionNode
     | IndexExpressionNode
     | ArrayLiteralNode
     | BinaryExpressionNode;
@@ -48,6 +49,7 @@ export interface BinaryExpressionNode {
 export interface AssignmentNode {
     type: "Assignment";
     target: IdentifierNode | IndexExpressionNode;
+    operator: "=" | "+=" | "-=" | "*=" | "/=";
     value: ExpressionNode;
 }
 
@@ -113,4 +115,11 @@ export interface ForOfStatementNode {
     iteratorName: string;
     iterable: ExpressionNode;
     body: ASTNode[];
+}
+
+export interface TernaryExpressionNode {
+    type: "TernaryExpression";
+    condition: ExpressionNode;
+    consequent: ExpressionNode;
+    alternate: ExpressionNode;
 }

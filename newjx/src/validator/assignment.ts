@@ -37,10 +37,43 @@ export function validateAssignment(node: AssignmentNode, scope: Scope): void {
         const isInput = node.value.type === "InputExpression";
         const actualType = getExpressionType(node.value, scope);
 
-        if (!isInput && declaredType !== "dynamic" && declaredType !== actualType) {
+        if (
+            !isInput &&
+            node.operator === "=" &&
+            declaredType !== "dynamic" &&
+            declaredType !== actualType
+        ) {
             throw new Error(
-                `대입하는 값의 타입이 일치하지 않습니다: ${name} (${declaredType} ← ${actualType})`
+                `대입하는 값의 타입이 일치하지 않습니다: ${name} (${declaredType} ← ${actualType})`,
             );
+        }
+
+        if (node.operator !== "=" && !isInput) {
+            if (node.operator === "+=") {
+                if (declaredType !== "int" && declaredType !== "str") {
+                    throw new Error(
+                        `+= 연산을 사용할 수 없는 타입입니다: ${declaredType}`,
+                    );
+                }
+
+                if (actualType !== "dynamic" && actualType !== declaredType) {
+                    throw new Error(
+                        `+= 연산의 타입이 일치하지 않습니다: ${declaredType} += ${actualType}`,
+                    );
+                }
+            } else {
+                if (declaredType !== "int") {
+                    throw new Error(
+                        `${node.operator} 연산을 사용할 수 없는 타입입니다: ${declaredType}`,
+                    );
+                }
+
+                if (actualType !== "dynamic" && actualType !== "int") {
+                    throw new Error(
+                        `${node.operator} 연산의 타입이 일치하지 않습니다: ${declaredType} ${node.operator} ${actualType}`,
+                    );
+                }
+            }
         }
 
         scope.initialized.add(name);
@@ -63,7 +96,11 @@ export function validateAssignment(node: AssignmentNode, scope: Scope): void {
             throw new Error(`배열 인덱스는 int 타입이어야 합니다: ${indexType}`);
         }
 
-        if (array.type === "Identifier" && index.type === "Literal" && typeof index.value === "number") {
+        if (
+            array.type === "Identifier" &&
+            index.type === "Literal" &&
+            typeof index.value === "number"
+        ) {
             let currentScope: Scope | undefined = scope;
             let length: number | undefined;
 
@@ -77,23 +114,51 @@ export function validateAssignment(node: AssignmentNode, scope: Scope): void {
 
             if (length !== undefined && index.value >= length) {
                 throw new Error(
-                    `배열 인덱스가 범위를 벗어났습니다: ${array.name}[${index.value}] (길이 ${length})`
+                    `배열 인덱스가 범위를 벗어났습니다: ${array.name}[${index.value}] (길이 ${length})`,
                 );
             }
 
             if (index.value < 0) {
-                throw new Error(
-                    `배열 인덱스는 0 이상이어야 합니다: ${index.value}`
-                );
+                throw new Error(`배열 인덱스는 0 이상이어야 합니다: ${index.value}`);
             }
         }
 
         const elementType = arrayType.slice(0, -2);
 
-        if (valueType !== "dynamic" && elementType !== "dynamic" && valueType !== elementType) {
-            throw new Error(
-                `배열 요소의 타입이 일치하지 않습니다: ${elementType} ← ${valueType}`
-            );
+        if (node.operator === "=") {
+            if (
+                valueType !== "dynamic" &&
+                elementType !== "dynamic" &&
+                valueType !== elementType
+            ) {
+                throw new Error(
+                    `배열 요소의 타입이 일치하지 않습니다: ${elementType} ← ${valueType}`,
+                );
+            }
+        } else if (node.operator === "+=") {
+            if (elementType !== "int" && elementType !== "str") {
+                throw new Error(
+                    `+= 연산을 사용할 수 없는 배열 요소 타입입니다: ${elementType}`,
+                );
+            }
+
+            if (valueType !== "dynamic" && valueType !== elementType) {
+                throw new Error(
+                    `+= 연산의 타입이 일치하지 않습니다: ${elementType} += ${valueType}`,
+                );
+            }
+        } else {
+            if (elementType !== "int") {
+                throw new Error(
+                    `${node.operator} 연산을 사용할 수 없는 배열 요소 타입입니다: ${elementType}`,
+                );
+            }
+
+            if (valueType !== "dynamic" && valueType !== "int") {
+                throw new Error(
+                    `${node.operator} 연산의 타입이 일치하지 않습니다: ${elementType} ${node.operator} ${valueType}`,
+                );
+            }
         }
 
         return;

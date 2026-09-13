@@ -11,9 +11,11 @@ export function parseAssignment(parser: Parser): AssignmentNode {
 
     if (parser.peek()?.type === "BracketOpen") {
         parser.next();
+
         const index = parser.parseExpression();
 
         parser.expect("BracketClose");
+
         target = {
             type: "IndexExpression",
             target,
@@ -21,13 +23,20 @@ export function parseAssignment(parser: Parser): AssignmentNode {
         };
     }
 
-    parser.expect("Operator", "=");
+    const operator = parser.expect("Operator");
+
+    if (!["=", "+=", "-=", "*=", "/="].includes(operator.value)) {
+        throw new Error(`잘못된 대입 연산자입니다: ${operator.value}`);
+    }
+
     const value = parser.parseExpression();
+
     parser.expect("Punctuation", ";");
 
     return {
         type: "Assignment",
         target,
+        operator: operator.value as "=" | "+=" | "-=" | "*=" | "/=",
         value,
     };
 }

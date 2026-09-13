@@ -1,7 +1,6 @@
-let nums: number[] = new Array(5);
-nums[0] = 1;
-nums[1] = 2;
-nums[2] = 3;
-for (const n of nums) {
-console.log(n);
-}
+import { input, parseInput } from "./src/runtime/input";
+
+let a: any[] = [];
+a[0] = parseInput(input("input a: "));
+a[2] = parseInput(input("input b: "));
+console.log(a);

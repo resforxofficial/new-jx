@@ -21,5 +21,8 @@ export function transformExpression(node: ExpressionNode): string {
         
         case "IndexExpression":
             return `${transformExpression(node.target)}[${transformExpression(node.index)}]`;
+
+        case "TernaryExpression":
+            return `(${transformExpression(node.condition)} ? ${transformExpression(node.consequent)} : ${transformExpression(node.alternate)})`;
     }
 }
