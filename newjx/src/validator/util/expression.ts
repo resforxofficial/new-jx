@@ -87,6 +87,23 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
             }
 
             return consequentType;
+
+        case "UnaryExpression":
+            const operandType = getExpressionType(node.operand, scope);
+
+            if (node.operator === "!") {
+                if (operandType !== "bool" && operandType !== "dynamic") {
+                    throw new Error(`! 연산자는 bool 타입만 사용할 수 있습니다: ${operandType}`);
+                }
+
+                return "bool";
+            }
+
+            if (operandType !== "int" && operandType !== "dynamic") {
+                throw new Error(`${node.operator} 연산자는 int 타입만 사용할 수 있습니다: ${operandType}`);
+            }
+
+            return operandType;
     }
 }
 

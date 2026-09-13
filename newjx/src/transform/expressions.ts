@@ -24,5 +24,14 @@ export function transformExpression(node: ExpressionNode): string {
 
         case "TernaryExpression":
             return `(${transformExpression(node.condition)} ? ${transformExpression(node.consequent)} : ${transformExpression(node.alternate)})`;
+
+        case "UnaryExpression":
+            const operand = transformExpression(node.operand);
+
+            if (node.operand.type === "BinaryExpression") {
+                return `${node.operator}(${operand})`;
+            }
+
+            return `${node.operator}${operand}`;
     }
 }

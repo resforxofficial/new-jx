@@ -23,6 +23,7 @@ export type ExpressionNode =
     | InputExpressionNode
     | TernaryExpressionNode
     | IndexExpressionNode
+    | UnaryExpressionNode
     | ArrayLiteralNode
     | BinaryExpressionNode;
 
@@ -122,4 +123,10 @@ export interface TernaryExpressionNode {
     condition: ExpressionNode;
     consequent: ExpressionNode;
     alternate: ExpressionNode;
+}
+
+export interface UnaryExpressionNode {
+    type: "UnaryExpression";
+    operator: "+" | "-" | "!";
+    operand: ExpressionNode;
 }

@@ -1,0 +1,4 @@
+mut int a = 10;
+mut int b = -(a + 2);
+
+out b;
