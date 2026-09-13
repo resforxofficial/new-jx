@@ -2,7 +2,6 @@ let nums: number[] = new Array(5);
 nums[0] = 1;
 nums[1] = 2;
 nums[2] = 3;
-nums[0] = 10;
-nums[3] = 4;
-console.log(nums[0]);
-console.log(nums[3]);
+for (const n of nums) {
+console.log(n);
+}

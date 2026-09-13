@@ -35,6 +35,7 @@ export type ASTNode =
     | OutputStatementNode
     | IfStatementNode
     | WhileStatementNode
+    | ForOfStatementNode
     | ForStatementNode;
 
 export interface BinaryExpressionNode {
@@ -104,4 +105,12 @@ export interface IndexExpressionNode {
     type: "IndexExpression";
     target: ExpressionNode;
     index: ExpressionNode;
+}
+
+export interface ForOfStatementNode {
+    type: "ForOfStatement";
+    varType?: string;
+    iteratorName: string;
+    iterable: ExpressionNode;
+    body: ASTNode[];
 }

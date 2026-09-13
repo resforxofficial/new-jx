@@ -8,6 +8,7 @@ import { validateIf } from "./valif";
 import { validateFor } from "./valifor";
 import { validateVariable } from "./variable";
 import { validateWhile } from "./while";
+import { validateForOf } from "./valforof";
 
 export function validateNode(node: ASTNode, scope: Scope): void {
     switch (node.type) {
@@ -46,6 +47,9 @@ export function validateNode(node: ASTNode, scope: Scope): void {
 
         case "ContinueStatement":
             return validateContinue(node, scope);
+        
+        case "ForOfStatement":
+            return validateForOf(node, scope);
 
         default:
             const _exhaustiveCheck: never = node;
