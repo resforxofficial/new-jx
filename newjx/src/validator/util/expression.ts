@@ -53,6 +53,20 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
             }
 
             return "array";
+
+        case "IndexExpression":
+            const targetType = getExpressionType(node.target, scope);
+            const indexType = getExpressionType(node.index, scope);
+
+            if (!targetType.endsWith("[]")) {
+                throw new Error(`배열이 아닌 값은 인덱싱할 수 없습니다: ${targetType}`);
+            }
+
+            if (indexType !== "int") {
+                throw new Error(`배열 인덱스는 int 타입이어야 합니다: ${indexType}`);
+            }
+
+            return targetType.slice(0, -2);
     }
 }
 

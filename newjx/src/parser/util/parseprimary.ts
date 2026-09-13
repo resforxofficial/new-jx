@@ -24,16 +24,34 @@ export function parsePrimary(parser: Parser): ExpressionNode {
             };
         case "Identifier":
             parser.next();
-            return {
+
+            const identifier = {
                 type: "Identifier",
                 name: token.value
-            };
+            } as ExpressionNode;
+
+            if (parser.peek()?.type === "BracketOpen") {
+                parser.next();
+
+                const index = parser.parseExpression();
+
+                parser.expect("BracketClose");
+
+                return {
+                    type: "IndexExpression",
+                    target: identifier,
+                    index
+                };
+            }
+
+            return identifier;
+
         case "ParenOpen":
             parser.next();
             const expression = parser.parseExpression();
             parser.expect("ParenClose");
             return expression;
-        
+
         case "Keyword":
             if (token.value !== "input") {
                 throw new Error(`표현식에서 사용할 수 없는 키워드입니다: ${token.value}`);
@@ -49,7 +67,7 @@ export function parsePrimary(parser: Parser): ExpressionNode {
 
         case "BraceOpen":
             return parser.parseArray();
-        
+
         default:
             throw new Error(`예상하지 못한 토큰입니다: ${token.value}`);
     }

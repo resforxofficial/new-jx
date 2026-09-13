@@ -21,6 +21,7 @@ export type ExpressionNode =
     | LiteralNode
     | IdentifierNode
     | InputExpressionNode
+    | IndexExpressionNode
     | ArrayLiteralNode
     | BinaryExpressionNode;
 
@@ -97,4 +98,10 @@ export interface ArrayLiteralNode {
 export interface ArrayTypeNode {
     elementType?: string;
     length?: number;
+}
+
+export interface IndexExpressionNode {
+    type: "IndexExpression";
+    target: ExpressionNode;
+    index: ExpressionNode;
 }

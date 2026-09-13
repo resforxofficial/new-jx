@@ -18,5 +18,8 @@ export function transformExpression(node: ExpressionNode): string {
 
         case "ArrayLiteral":
             return `[${node.elements.map(element => transformExpression(element)).join(", ")}]`;
+        
+        case "IndexExpression":
+            return `${transformExpression(node.target)}[${transformExpression(node.index)}]`;
     }
 }
