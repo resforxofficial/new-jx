@@ -53,6 +53,7 @@ export function validateVariable(node: VariableDeclarationNode, scope: Scope): v
 
         node.array.elementType = elementType;
         scope.declared.set(node.name, `${elementType}[]`);
+        scope.arrayLength.set(node.name, node.array.length);
 
         if (node.mutable) {
             scope.mutable.add(node.name);

@@ -46,7 +46,7 @@ export interface BinaryExpressionNode {
 
 export interface AssignmentNode {
     type: "Assignment";
-    target: IdentifierNode;
+    target: IdentifierNode | IndexExpressionNode;
     value: ExpressionNode;
 }
 

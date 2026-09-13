@@ -18,6 +18,7 @@ export function validateWhile(node: WhileStatementNode, scope: Scope): void {
         declared: new Map(),
         mutable: new Set(),
         initialized: new Set(),
+        arrayLength: new Map(),
         parent: scope,
         loopDepth: scope.loopDepth + 1,
     };

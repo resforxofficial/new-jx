@@ -15,8 +15,10 @@ export function validateIf(node: IfStatementNode, scope: Scope): void {
     const consequentScope: Scope = {
         declared: new Map(),
         mutable: new Set(),
+        arrayLength: new Map(),
         initialized: new Set(),
         parent: scope,
+        loopDepth: 0,
     };
 
     for (const statement of node.consequent) {
@@ -27,7 +29,9 @@ export function validateIf(node: IfStatementNode, scope: Scope): void {
         const alternateScope: Scope = {
             declared: new Map(),
             mutable: new Set(),
+            arrayLength: new Map(),
             initialized: new Set(),
+            loopDepth: 0,
             parent: scope,
         }
 

@@ -1,3 +1,7 @@
-mut [5]nums = { 1, 2, 3 };
+mut int[5] nums = { 1, 2, 3 };
+
+nums[0] = 10;
+nums[3] = 4;
+
 out nums[0];
-out nums[2];
+out nums[3];
