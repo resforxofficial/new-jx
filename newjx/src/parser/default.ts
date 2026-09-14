@@ -19,6 +19,7 @@ import { parseArrayLiteral } from './util3/parse_array';
 import { parseUnary } from './util3/parse_unary';
 
 import { parseFunction } from './utiln4/parsefunc';
+import { parseReturn } from './utiln4/parse_return';
 
 export {
     parseVariable,
@@ -39,4 +40,5 @@ export {
     parseArrayLiteral,
     parseUnary,
     parseFunction,
+    parseReturn,
 };

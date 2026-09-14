@@ -25,6 +25,7 @@ export type ExpressionNode =
     | IndexExpressionNode
     | UnaryExpressionNode
     | ArrayLiteralNode
+    | CallExpressionNode
     | BinaryExpressionNode;
 
 export type StatementNode = VariableDeclarationNode;
@@ -39,7 +40,13 @@ export type ASTNode =
     | WhileStatementNode
     | ForOfStatementNode
     | ForStatementNode
+    | ReturnStatementNode
     | FunctionDeclarationNode;
+
+export interface ReturnStatementNode {
+    type: "ReturnStatement";
+    value?: ExpressionNode;
+}
 
 export interface BinaryExpressionNode {
     type: "BinaryExpression";
@@ -141,4 +148,10 @@ export interface FunctionDeclarationNode {
         name: string;
     }[];
     body: ASTNode[];
+}
+
+export interface CallExpressionNode {
+    type: "CallExpression";
+    callee: ExpressionNode;
+    arguments: ExpressionNode[];
 }

@@ -18,6 +18,7 @@ import {
     parseArrayLiteral,
     parseUnary,
     parseFunction,
+    parseReturn,
 } from "./default";
 
 export class Parser {
@@ -109,6 +110,10 @@ export class Parser {
             return parseFunction(this);
         }
 
+        if (token.type === "Keyword" && token.value === "return") {
+            return parseReturn(this);
+        }
+
         throw new Error(`알 수 없는 문장입니다: ${token.value}`);
     }
 
@@ -170,5 +175,9 @@ export class Parser {
 
     parseFunction() {
         return parseFunction(this);
+    }
+
+    parseReturn() {
+        return parseReturn(this);
     }
 }

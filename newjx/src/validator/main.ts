@@ -7,6 +7,7 @@ export interface Scope {
     initialized: Set<string>;
     arrayLength: Map<string, number | undefined>;
     parent?: Scope;
+    functionReturnType?: string;
     loopDepth: number;
 }
 

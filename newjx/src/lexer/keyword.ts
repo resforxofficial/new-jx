@@ -9,6 +9,7 @@ export const KEYWORDS = new Set([
     "input",
     "break",
     "block",
+    "return",
 ]);
 
 export const TYPES = new Set(["int", "str", "bool", "void"]);

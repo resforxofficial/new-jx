@@ -9,6 +9,7 @@ export function validateFunction(node: FunctionDeclarationNode, scope: Scope): v
         initialized: new Set(),
         arrayLength: new Map(),
         parent: scope,
+        functionReturnType: node.returnType,
         loopDepth: 0,
     };
 
@@ -22,7 +23,19 @@ export function validateFunction(node: FunctionDeclarationNode, scope: Scope): v
         functionScope.initialized.add(parameter.name);
     }
 
+    let hasReturn = false;
+
     for (const statement of node.body) {
         validateNode(statement, functionScope);
+
+        if (statement.type === "ReturnStatement") {
+            hasReturn = true;
+        }
+    }
+
+    if (node.returnType !== "void" && !hasReturn) {
+        throw new Error(
+            `반환값이 필요한 함수입니다: ${node.name} (${node.returnType})`
+        );
     }
 }

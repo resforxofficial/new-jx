@@ -1,4 +1,5 @@
 import type { ASTNode } from "../ast/node";
+import type { TransformScope } from "./especial/context";
 
 import { transformVariable } from "./variable";
 import { transformOutput } from "./output";
@@ -6,11 +7,11 @@ import { transformAssignment } from "./assignment";
 import { transformIf } from "./trif";
 import { transformWhile } from "./while";
 import { transformFor } from './trfor';
-import type { TransformScope } from "./especial/context";
 import { transformBreak } from "./break";
 import { transformContinue } from "./continue";
 import { transformForOf } from "./tranforof";
 import { transformFunction } from "./tranfunc/function";
+import { transformReturn } from "./tranfunc/tranreturn";
 
 export function transformNode(node: ASTNode, scope: TransformScope): string {
     switch (node.type) {
@@ -41,6 +42,9 @@ export function transformNode(node: ASTNode, scope: TransformScope): string {
 
         case "FunctionDeclaration":
             return transformFunction(node, scope);
+        
+        case "ReturnStatement":
+            return transformReturn(node, scope);
 
         default:
             const _exhaustiveCheck: never = node;

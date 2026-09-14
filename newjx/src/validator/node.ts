@@ -11,6 +11,7 @@ import { validateWhile } from "./while";
 import { validateForOf } from "./valforof";
 
 import { validateFunction } from "./valifunc/function";
+import { validateReturn } from "./valifunc/return";
 
 export function validateNode(node: ASTNode, scope: Scope): void {
     switch (node.type) {
@@ -55,6 +56,10 @@ export function validateNode(node: ASTNode, scope: Scope): void {
         
         case "FunctionDeclaration":
             return validateFunction(node, scope);
+        
+        case "ReturnStatement":
+            validateReturn(node, scope);
+            return;
 
         default:
             const _exhaustiveCheck: never = node;
