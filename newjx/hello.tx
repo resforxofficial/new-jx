@@ -1,4 +1,4 @@
-mut int a = 10;
-mut int b = -(a + 2);
-
-out b;
+block int add(int a, int b) {
+    out a;
+    out b;
+}

@@ -10,6 +10,7 @@ import type { TransformScope } from "./especial/context";
 import { transformBreak } from "./break";
 import { transformContinue } from "./continue";
 import { transformForOf } from "./tranforof";
+import { transformFunction } from "./tranfunc/function";
 
 export function transformNode(node: ASTNode, scope: TransformScope): string {
     switch (node.type) {
@@ -37,6 +38,9 @@ export function transformNode(node: ASTNode, scope: TransformScope): string {
         
         case "ForOfStatement":
             return transformForOf(node, scope);
+
+        case "FunctionDeclaration":
+            return transformFunction(node, scope);
 
         default:
             const _exhaustiveCheck: never = node;

@@ -18,6 +18,8 @@ import { parseContinue } from './util2/parse_continue';
 import { parseArrayLiteral } from './util3/parse_array';
 import { parseUnary } from './util3/parse_unary';
 
+import { parseFunction } from './utiln4/parsefunc';
+
 export {
     parseVariable,
     parseComparison,
@@ -36,4 +38,5 @@ export {
     parseContinue,
     parseArrayLiteral,
     parseUnary,
+    parseFunction,
 };

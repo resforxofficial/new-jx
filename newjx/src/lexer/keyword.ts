@@ -8,9 +8,10 @@ export const KEYWORDS = new Set([
     "for",
     "input",
     "break",
+    "block",
 ]);
 
-export const TYPES = new Set(["int", "str", "bool"]);
+export const TYPES = new Set(["int", "str", "bool", "void"]);
 
 export const BOOLEANS = new Set(["true", "false"]);
 

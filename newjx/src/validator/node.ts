@@ -10,6 +10,8 @@ import { validateVariable } from "./variable";
 import { validateWhile } from "./while";
 import { validateForOf } from "./valforof";
 
+import { validateFunction } from "./valifunc/function";
+
 export function validateNode(node: ASTNode, scope: Scope): void {
     switch (node.type) {
         case "VariableDeclaration":
@@ -50,6 +52,9 @@ export function validateNode(node: ASTNode, scope: Scope): void {
         
         case "ForOfStatement":
             return validateForOf(node, scope);
+        
+        case "FunctionDeclaration":
+            return validateFunction(node, scope);
 
         default:
             const _exhaustiveCheck: never = node;

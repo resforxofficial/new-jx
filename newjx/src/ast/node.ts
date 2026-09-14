@@ -38,7 +38,8 @@ export type ASTNode =
     | IfStatementNode
     | WhileStatementNode
     | ForOfStatementNode
-    | ForStatementNode;
+    | ForStatementNode
+    | FunctionDeclarationNode;
 
 export interface BinaryExpressionNode {
     type: "BinaryExpression";
@@ -129,4 +130,15 @@ export interface UnaryExpressionNode {
     type: "UnaryExpression";
     operator: "+" | "-" | "!";
     operand: ExpressionNode;
+}
+
+export interface FunctionDeclarationNode {
+    type: "FunctionDeclaration";
+    returnType: string;
+    name: string;
+    parameters: {
+        type: string;
+        name: string;
+    }[];
+    body: ASTNode[];
 }

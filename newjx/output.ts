@@ -1,3 +1,4 @@
-let a: number = 10;
-let b: number = -(a + 2);
+function add(a: number, b: number): number {
+console.log(a);
 console.log(b);
+}

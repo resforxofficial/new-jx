@@ -17,6 +17,7 @@ import {
     parseContinue,
     parseArrayLiteral,
     parseUnary,
+    parseFunction,
 } from "./default";
 
 export class Parser {
@@ -104,6 +105,10 @@ export class Parser {
             return parseContinue(this);
         }
 
+        if (token.type === "Keyword" && token.value === "block") {
+            return parseFunction(this);
+        }
+
         throw new Error(`알 수 없는 문장입니다: ${token.value}`);
     }
 
@@ -161,5 +166,9 @@ export class Parser {
 
     parseUnary() {
         return parseUnary(this);
+    }
+
+    parseFunction() {
+        return parseFunction(this);
     }
 }
