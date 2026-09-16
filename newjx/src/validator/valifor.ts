@@ -10,6 +10,7 @@ export function validateFor(node: ForStatementNode, scope: Scope): void {
         mutable: new Set(),
         initialized: new Set(),
         arrayLength: new Map(),
+        functions: new Map(),
         parent: scope,
         loopDepth: scope.loopDepth + 1,
     };

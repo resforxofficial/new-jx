@@ -22,25 +22,41 @@ export function parsePrimary(parser: Parser): ExpressionNode {
                 type: "Literal",
                 value: token.value === "true",
             };
+
         case "Identifier":
             parser.next();
 
-            const identifier = {
+            const identifier: ExpressionNode = {
                 type: "Identifier",
                 name: token.value
-            } as ExpressionNode;
+            };
 
-            if (parser.peek()?.type === "BracketOpen") {
+            if (parser.peek()?.type === "ParenOpen") {
                 parser.next();
 
-                const index = parser.parseExpression();
+                const args: ExpressionNode[] = [];
 
-                parser.expect("BracketClose");
+                if (parser.peek()?.type !== "ParenClose") {
+                    while (true) {
+                        args.push(parser.parseExpression());
+
+                        if (
+                            parser.peek()?.type !== "Punctuation" ||
+                            parser.peek()?.value !== ","
+                        ) {
+                            break;
+                        }
+
+                        parser.next();
+                    }
+                }
+
+                parser.expect("ParenClose");
 
                 return {
-                    type: "IndexExpression",
-                    target: identifier,
-                    index
+                    type: "CallExpression",
+                    callee: identifier,
+                    arguments: args
                 };
             }
 

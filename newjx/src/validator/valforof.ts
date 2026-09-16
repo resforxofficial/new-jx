@@ -33,6 +33,7 @@ export function validateForOf(node: ForOfStatementNode, scope: Scope): void {
         initialized: new Set(),
         parent: scope,
         arrayLength: new Map(),
+        functions: new Map(),
         loopDepth: scope.loopDepth + 1,
     };
 

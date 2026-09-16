@@ -17,6 +17,7 @@ export function validateIf(node: IfStatementNode, scope: Scope): void {
         mutable: new Set(),
         arrayLength: new Map(),
         initialized: new Set(),
+        functions: new Map(),
         parent: scope,
         loopDepth: 0,
     };
@@ -29,6 +30,7 @@ export function validateIf(node: IfStatementNode, scope: Scope): void {
         const alternateScope: Scope = {
             declared: new Map(),
             mutable: new Set(),
+            functions: new Map(),
             arrayLength: new Map(),
             initialized: new Set(),
             loopDepth: 0,

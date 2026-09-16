@@ -12,13 +12,13 @@ export function transformExpression(node: ExpressionNode): string {
 
         case "BinaryExpression":
             return `${transformExpression(node.left)} ${node.operator} ${transformExpression(node.right)}`;
-        
+
         case "InputExpression":
             return `input("${node.promptText}")`;
 
         case "ArrayLiteral":
             return `[${node.elements.map(element => transformExpression(element)).join(", ")}]`;
-        
+
         case "IndexExpression":
             return `${transformExpression(node.target)}[${transformExpression(node.index)}]`;
 
@@ -33,5 +33,10 @@ export function transformExpression(node: ExpressionNode): string {
             }
 
             return `${node.operator}${operand}`;
+
+        case "CallExpression":
+            return `${transformExpression(node.callee)}(${node.arguments
+                .map(argument => transformExpression(argument))
+                .join(", ")})`;
     }
 }

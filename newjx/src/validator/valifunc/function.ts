@@ -3,11 +3,21 @@ import type { Scope } from "../main";
 import { validateNode } from "../node";
 
 export function validateFunction(node: FunctionDeclarationNode, scope: Scope): void {
+    if (scope.functions.has(node.name)) {
+        throw new Error(`이미 선언된 함수입니다: ${node.name}`);
+    }
+
+    scope.functions.set(node.name, {
+        returnType: node.returnType,
+        parameters: node.parameters,
+    });
+
     const functionScope: Scope = {
         declared: new Map(),
         mutable: new Set(),
         initialized: new Set(),
         arrayLength: new Map(),
+        functions: scope.functions,
         parent: scope,
         functionReturnType: node.returnType,
         loopDepth: 0,

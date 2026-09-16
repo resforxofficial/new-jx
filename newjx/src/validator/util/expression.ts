@@ -104,6 +104,43 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
             }
 
             return operandType;
+
+        case "CallExpression":
+            if (node.callee.type !== "Identifier") {
+                throw new Error("함수 호출 대상은 함수 이름이어야 합니다.");
+            }
+
+            const name = node.callee.name;
+            let currentScope1: Scope | undefined = scope;
+            let functionInfo;
+
+            while (currentScope1) {
+                functionInfo = currentScope1.functions.get(name);
+                if (functionInfo) {
+                    break;
+                }
+
+                currentScope1 = currentScope1.parent;
+            }
+
+            if (!functionInfo) {
+                throw new Error(`선언되지 않은 함수입니다: ${name}`);
+            }
+
+            if (node.arguments.length !== functionInfo.parameters.length) {
+                throw new Error(`함수 인자의 개수가 일치하지 않습니다: ${name} (필요 ${functionInfo.parameters.length}, 전달 ${node.arguments.length})`);
+            }
+
+            for (let i = 0; i < node.arguments.length; i++) {
+                const actualType = getExpressionType(node.arguments[i], scope);
+                const expectedType = functionInfo.parameters[i].type;
+
+                if (actualType !== "dynamic" && expectedType !== "dynamic" && actualType !== expectedType) {
+                    throw new Error(`함수 인자의 타입이 일치하지 않습니다: ${name} (${expectedType} ← ${actualType})`);
+                }
+            }
+
+            return functionInfo.returnType;
     }
 }
 
