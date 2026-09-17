@@ -60,6 +60,20 @@ export function parsePrimary(parser: Parser): ExpressionNode {
                 };
             }
 
+            if (parser.peek()?.type === "BracketOpen") {
+                parser.next();
+
+                const index = parser.parseExpression();
+
+                parser.expect("BracketClose");
+
+                return {
+                    type: "IndexExpression",
+                    target: identifier,
+                    index
+                };
+            }
+
             return identifier;
 
         case "ParenOpen":

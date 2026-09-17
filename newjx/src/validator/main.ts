@@ -38,7 +38,12 @@ export function validate(ast: ASTNode[]): void {
 
             scope.functions.set(node.name, {
                 returnType: node.returnType,
-                parameters: node.parameters,
+                parameters: node.parameters.map(parameter => ({
+                    type: parameter.array
+                        ? `${parameter.type}[]`
+                        : parameter.type,
+                    name: parameter.name,
+                })),
             });
         }
     }

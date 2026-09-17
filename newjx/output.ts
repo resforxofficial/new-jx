@@ -1,11 +1,5 @@
-function fact(n: number): number {
-if (n <= 1) {
-return 1;
+function first(nums: number[]): number {
+    return nums[0];
 }
-return n * fact(n - 1);
-}
-let i = 1;
-while (i < 6) {
-console.log(fact(i));
-i += 1;
-}
+let a: number[] = [10, 20, 30];
+console.log(first(a));

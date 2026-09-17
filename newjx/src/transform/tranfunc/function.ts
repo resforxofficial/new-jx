@@ -13,7 +13,15 @@ export function transformFunction(node: FunctionDeclarationNode, scope: Transfor
     const returnType = typeMap[node.returnType] ?? node.returnType;
 
     const parameters = node.parameters
-        .map(parameter => `${parameter.name}: ${typeMap[parameter.type] ?? parameter.type}`)
+        .map(parameter => {
+            const type = typeMap[parameter.type] ?? parameter.type;
+
+            if (parameter.array) {
+                return `${parameter.name}: ${type}[]`;
+            }
+
+            return `${parameter.name}: ${type}`;
+        })
         .join(", ");
 
     const body = node.body

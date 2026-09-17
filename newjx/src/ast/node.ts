@@ -143,10 +143,12 @@ export interface UnaryExpressionNode {
 export interface FunctionDeclarationNode {
     type: "FunctionDeclaration";
     returnType: string;
+    returnArray?: ArrayTypeNode;
     name: string;
     parameters: {
         type: string;
         name: string;
+        array?: ArrayTypeNode;
     }[];
     body: ASTNode[];
 }

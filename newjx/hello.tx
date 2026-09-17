@@ -1,0 +1,7 @@
+block int first(int[] nums) {
+    return nums[0];
+}
+
+mut int[] a = {10, 20, 30};
+
+out first(a);
