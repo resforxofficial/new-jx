@@ -1,7 +1,0 @@
-block int add(int a, int b) {
-    return a + b;
-}
-
-mut int result = add(10, 20);
-
-out result;

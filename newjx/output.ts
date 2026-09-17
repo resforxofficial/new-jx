@@ -1,5 +1,11 @@
-function add(a: number, b: number): number {
-return a + b;
+function fact(n: number): number {
+if (n <= 1) {
+return 1;
 }
-let result: number = add(10, 20);
-console.log(result);
+return n * fact(n - 1);
+}
+let i = 1;
+while (i < 6) {
+console.log(fact(i));
+i += 1;
+}

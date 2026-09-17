@@ -79,6 +79,16 @@ export class Parser {
         }
 
         if (token.type === "Identifier") {
+            if (this.peek(1)?.type === "ParenOpen") {
+                const expression1 = this.parseExpression();
+                this.expect("Punctuation", ";");
+
+                return {
+                    type: "ExpressionStatement",
+                    expression: expression1,
+                };
+            }
+
             return parseAssignment(this);
         }
 

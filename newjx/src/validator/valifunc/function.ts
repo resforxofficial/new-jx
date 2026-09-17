@@ -1,17 +1,8 @@
-import type { FunctionDeclarationNode } from "../../ast/node";
+import type { ASTNode, FunctionDeclarationNode } from "../../ast/node";
 import type { Scope } from "../main";
 import { validateNode } from "../node";
 
 export function validateFunction(node: FunctionDeclarationNode, scope: Scope): void {
-    if (scope.functions.has(node.name)) {
-        throw new Error(`이미 선언된 함수입니다: ${node.name}`);
-    }
-
-    scope.functions.set(node.name, {
-        returnType: node.returnType,
-        parameters: node.parameters,
-    });
-
     const functionScope: Scope = {
         declared: new Map(),
         mutable: new Set(),
@@ -33,19 +24,40 @@ export function validateFunction(node: FunctionDeclarationNode, scope: Scope): v
         functionScope.initialized.add(parameter.name);
     }
 
-    let hasReturn = false;
-
     for (const statement of node.body) {
         validateNode(statement, functionScope);
-
-        if (statement.type === "ReturnStatement") {
-            hasReturn = true;
-        }
     }
 
-    if (node.returnType !== "void" && !hasReturn) {
+    if (node.returnType !== "void" && !blockReturns(node.body)) {
         throw new Error(
             `반환값이 필요한 함수입니다: ${node.name} (${node.returnType})`
         );
     }
+}
+
+function blockReturns(body: ASTNode[]): boolean {
+    for (const statement of body) {
+        if (statement.type === "ReturnStatement") {
+            return true;
+        }
+
+        if (statement.type === "IfStatement") {
+            const consequentReturns = blockReturns(statement.consequent);
+            const alternateReturns = statement.alternate
+                ? blockReturns(statement.alternate)
+                : false;
+
+            if (consequentReturns && alternateReturns) {
+                return true;
+            }
+        }
+
+        if (statement.type === "WhileStatement") {
+            if (statement.test.type === "Literal" && statement.test.value === true && blockReturns(statement.body)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

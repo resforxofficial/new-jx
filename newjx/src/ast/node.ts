@@ -41,6 +41,7 @@ export type ASTNode =
     | ForOfStatementNode
     | ForStatementNode
     | ReturnStatementNode
+    | ExpressionStatementNode
     | FunctionDeclarationNode;
 
 export interface ReturnStatementNode {
@@ -154,4 +155,9 @@ export interface CallExpressionNode {
     type: "CallExpression";
     callee: ExpressionNode;
     arguments: ExpressionNode[];
+}
+
+export interface ExpressionStatementNode {
+    type: "ExpressionStatement";
+    expression: ExpressionNode;
 }

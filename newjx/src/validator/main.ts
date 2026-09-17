@@ -31,6 +31,19 @@ export function validate(ast: ASTNode[]): void {
     };
 
     for (const node of ast) {
+        if (node.type === "FunctionDeclaration") {
+            if (scope.functions.has(node.name)) {
+                throw new Error(`이미 선언된 함수입니다: ${node.name}`);
+            }
+
+            scope.functions.set(node.name, {
+                returnType: node.returnType,
+                parameters: node.parameters,
+            });
+        }
+    }
+
+    for (const node of ast) {
         validateNode(node, scope);
     }
 }

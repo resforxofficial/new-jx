@@ -12,6 +12,7 @@ import { validateForOf } from "./valforof";
 
 import { validateFunction } from "./valifunc/function";
 import { validateReturn } from "./valifunc/return";
+import { validateExpressionStatement } from "./newexpr";
 
 export function validateNode(node: ASTNode, scope: Scope): void {
     switch (node.type) {
@@ -59,6 +60,10 @@ export function validateNode(node: ASTNode, scope: Scope): void {
         
         case "ReturnStatement":
             validateReturn(node, scope);
+            return;
+
+        case "ExpressionStatement":
+            validateExpressionStatement(node, scope);
             return;
 
         default:

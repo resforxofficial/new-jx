@@ -12,6 +12,7 @@ import { transformContinue } from "./continue";
 import { transformForOf } from "./tranforof";
 import { transformFunction } from "./tranfunc/function";
 import { transformReturn } from "./tranfunc/tranreturn";
+import { transformExpressionStatement } from "./newepxr";
 
 export function transformNode(node: ASTNode, scope: TransformScope): string {
     switch (node.type) {
@@ -45,6 +46,9 @@ export function transformNode(node: ASTNode, scope: TransformScope): string {
         
         case "ReturnStatement":
             return transformReturn(node, scope);
+
+        case "ExpressionStatement":
+            return transformExpressionStatement(node, scope);
 
         default:
             const _exhaustiveCheck: never = node;
