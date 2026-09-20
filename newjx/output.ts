@@ -1,5 +1,4 @@
-function first(nums: number[]): number {
-    return nums[0];
+function makeNumbers(): number {
+return [1, 2, 3];
 }
-let a: number[] = [10, 20, 30];
-console.log(first(a));
+let nums: number[] = makeNumbers();

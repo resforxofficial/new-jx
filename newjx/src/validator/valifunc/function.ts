@@ -10,7 +10,8 @@ export function validateFunction(node: FunctionDeclarationNode, scope: Scope): v
         arrayLength: new Map(),
         functions: scope.functions,
         parent: scope,
-        functionReturnType: node.returnType,
+        functionReturnType: node.returnArray ? `${node.returnType}[]` : node.returnType,
+        functionReturnArrayLength: node.returnArray?.length,
         loopDepth: 0,
     };
 

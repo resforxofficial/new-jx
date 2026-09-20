@@ -1,7 +1,5 @@
-block int first(int[] nums) {
-    return nums[0];
+block int[] makeNumbers() {
+    return { 1, 2, 3 };
 }
 
-mut int[] a = {10, 20, 30};
-
-out first(a);
+mut int[] nums = makeNumbers();

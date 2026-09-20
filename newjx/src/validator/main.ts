@@ -16,6 +16,7 @@ export interface Scope {
     arrayLength: Map<string, number | undefined>;
     parent?: Scope;
     functionReturnType?: string;
+    functionReturnArrayLength?: number;
     functions: Map<string, FunctionInfo>;
     loopDepth: number;
 }
@@ -24,8 +25,8 @@ export function validate(ast: ASTNode[]): void {
     const scope: Scope = {
         declared: new Map(),
         mutable: new Set(),
-        arrayLength: new Map(),
         initialized: new Set(),
+        arrayLength: new Map(),
         functions: new Map(),
         loopDepth: 0,
     };
@@ -37,7 +38,9 @@ export function validate(ast: ASTNode[]): void {
             }
 
             scope.functions.set(node.name, {
-                returnType: node.returnType,
+                returnType: node.returnArray
+                    ? `${node.returnType}[]`
+                    : node.returnType,
                 parameters: node.parameters.map(parameter => ({
                     type: parameter.array
                         ? `${parameter.type}[]`
