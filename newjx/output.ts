@@ -1,4 +1,4 @@
-function makeNumbers(): number {
-return [1, 2, 3];
+function makeNumbers(): number[] {
+    return [1, 2, 3];
 }
-let nums: number[] = makeNumbers();
+let nums: number[] = new Array(4);

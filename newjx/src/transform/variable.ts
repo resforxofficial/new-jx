@@ -53,15 +53,17 @@ export function transformVariable(node: VariableDeclarationNode, scope: Transfor
         );
 
         if (node.array.length !== undefined) {
-            let result = `${keyword} ${node.name}: ${arrayType} = new Array(${node.array.length});`;
-
             if (node.value?.type === "ArrayLiteral") {
+                let result = `${keyword} ${node.name}: ${arrayType} = new Array(${node.array.length});`;
+
                 node.value.elements.forEach((element, index) => {
                     result += `\n${node.name}[${index}] = ${transformExpression(element)};`;
                 });
+
+                return result;
             }
 
-            return result;
+            return `${keyword} ${node.name}: ${arrayType} = ${value};`;
         }
 
         return `${keyword} ${node.name}: ${arrayType} = ${value};`;

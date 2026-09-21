@@ -1,5 +1,5 @@
-block int[] makeNumbers() {
+block int[5] makeNumbers() {
     return { 1, 2, 3 };
 }
 
-mut int[] nums = makeNumbers();
+mut int[4] nums = makeNumbers();

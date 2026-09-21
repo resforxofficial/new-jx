@@ -10,7 +10,10 @@ const typeMap: Record<string, string> = {
 };
 
 export function transformFunction(node: FunctionDeclarationNode, scope: TransformScope): string {
-    const returnType = typeMap[node.returnType] ?? node.returnType;
+    let returnType = typeMap[node.returnType] ?? node.returnType;
+    if (node.returnArray) {
+        returnType += "[]";
+    }
 
     const parameters = node.parameters
         .map(parameter => {
