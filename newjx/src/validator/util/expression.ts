@@ -1,4 +1,4 @@
-import type { ExpressionNode } from "../../ast/node";
+import type { ArrayTypeNode, ExpressionNode } from "../../ast/node";
 import type { Scope } from "../main";
 
 export function getExpressionType(node: ExpressionNode, scope: Scope): string {
@@ -35,42 +35,8 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
         case "InputExpression":
             return "dynamic";
 
-        case "BinaryExpression":
-            return getBinaryExpressionType(node, scope);
-
-        case "ArrayLiteral":
-            if (node.elements.length === 0) {
-                return "array";
-            }
-
-            const firstType = getExpressionType(node.elements[0], scope);
-            for (const element of node.elements) {
-                const elementType = getExpressionType(element, scope);
-
-                if (elementType !== firstType) {
-                    throw new Error(`배열 요소의 타입이 일치하지 않습니다: ${firstType} ← ${elementType}`);
-                }
-            }
-
-            return "array";
-
-        case "IndexExpression":
-            const targetType = getExpressionType(node.target, scope);
-            const indexType = getExpressionType(node.index, scope);
-
-            if (!targetType.endsWith("[]")) {
-                throw new Error(`배열이 아닌 값은 인덱싱할 수 없습니다: ${targetType}`);
-            }
-
-            if (indexType !== "int") {
-                throw new Error(`배열 인덱스는 int 타입이어야 합니다: ${indexType}`);
-            }
-
-            return targetType.slice(0, -2);
-
         case "TernaryExpression":
             const conditionType = getExpressionType(node.condition, scope);
-
             if (conditionType !== "bool" && conditionType !== "dynamic") {
                 throw new Error(`삼항 연산자의 조건은 bool 타입이어야 합니다: ${conditionType}`);
             }
@@ -88,6 +54,20 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
 
             return consequentType;
 
+        case "IndexExpression":
+            const targetType = getExpressionType(node.target, scope);
+            const indexType = getExpressionType(node.index, scope);
+
+            if (!targetType.endsWith("[]")) {
+                throw new Error(`배열이 아닌 값은 인덱싱할 수 없습니다: ${targetType}`);
+            }
+
+            if (indexType !== "int") {
+                throw new Error(`배열 인덱스는 int 타입이어야 합니다: ${indexType}`);
+            }
+
+            return targetType.slice(0, -2);
+
         case "UnaryExpression":
             const operandType = getExpressionType(node.operand, scope);
 
@@ -104,6 +84,22 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
             }
 
             return operandType;
+
+        case "ArrayLiteral":
+            if (node.elements.length === 0) {
+                return "dynamic[]";
+            }
+
+            const firstType = getExpressionType(node.elements[0], scope);
+            for (const element of node.elements) {
+                const elementType = getExpressionType(element, scope);
+
+                if (elementType !== firstType) {
+                    return "dynamic[]";
+                }
+            }
+
+            return `${firstType}[]`;
 
         case "CallExpression":
             if (node.callee.type !== "Identifier") {
@@ -128,26 +124,108 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
             }
 
             if (node.arguments.length !== functionInfo.parameters.length) {
-                throw new Error(`함수 인자의 개수가 일치하지 않습니다: ${name} (필요 ${functionInfo.parameters.length}, 전달 ${node.arguments.length})`);
+                throw new Error(`함수 인자의 개수가 일치하지 않습니다: ${name}
+                    (필요 ${functionInfo.parameters.length}, 전달 ${node.arguments.length})`,);
             }
 
             for (let i = 0; i < node.arguments.length; i++) {
-                const actualType = getExpressionType(node.arguments[i], scope);
-                const expectedType = functionInfo.parameters[i].type;
+                const argument = node.arguments[i];
+                const parameter = functionInfo.parameters[i];
+
+                if (parameter.array) {
+                    const actualArray = getArrayInfo(argument, scope);
+
+                    if (!actualArray) {
+                        throw new Error(`배열 인자가 필요합니다: ${name} (${parameter.name})`,);
+                    }
+
+                    if (parameter.array.elementType && parameter.array.elementType !== "dynamic" &&
+                        actualArray.elementType !== "dynamic" && parameter.array.elementType !== actualArray.elementType
+                    ) {
+                        throw new Error(`함수 배열 인자의 타입이 일치하지 않습니다: ${name}
+                            (${parameter.array.elementType}[] ← ${actualArray.elementType}[])`,);
+                    }
+
+                    if (parameter.array.length !== undefined && actualArray.initializedLength !== undefined &&
+                        actualArray.initializedLength > parameter.array.length
+                    ) {
+                        throw new Error(`함수 배열 인자의 크기를 초과했습니다: ${name}
+                            (${parameter.array.length} ← ${actualArray.initializedLength})`,);
+                    }
+
+                    continue;
+                }
+
+                const actualType = getExpressionType(argument, scope);
+                const expectedType = parameter.type;
 
                 if (actualType !== "dynamic" && expectedType !== "dynamic" && actualType !== expectedType) {
-                    throw new Error(`함수 인자의 타입이 일치하지 않습니다: ${name} (${expectedType} ← ${actualType})`);
+                    throw new Error(`함수 인자의 타입이 일치하지 않습니다: ${name} (${expectedType} ← ${actualType})`,);
                 }
             }
 
-            return functionInfo.returnType;
+            return functionInfo.returnArray ? `${functionInfo.returnArray.elementType ?? "dynamic"}[]` : functionInfo.returnType;
+
+        case "BinaryExpression":
+            return getBinaryExpressionType(node, scope);
+
     }
 }
 
-function getBinaryExpressionType(
-    node: Extract<ExpressionNode, { type: "BinaryExpression" }>,
-    scope: Scope,
-): string {
+export function getArrayInfo(node: ExpressionNode, scope: Scope): ArrayTypeNode | undefined {
+    switch (node.type) {
+        case "ArrayLiteral":
+            if (node.elements.length === 0) {
+                return { elementType: "dynamic", initializedLength: 0, };
+            }
+
+            const firstType = getExpressionType(node.elements[0], scope);
+            for (const element of node.elements) {
+                const elementType = getExpressionType(element, scope);
+
+                if (elementType !== firstType) {
+                    return { elementType: "dynamic", initializedLength: node.elements.length, };
+                }
+            }
+
+            return { elementType: firstType, initializedLength: node.elements.length, };
+
+        case "Identifier":
+            let currentScope: Scope | undefined = scope;
+            while (currentScope) {
+                const arrayInfo = currentScope.arrays.get(node.name);
+
+                if (arrayInfo) {
+                    return arrayInfo;
+                }
+
+                currentScope = currentScope.parent;
+            }
+
+            return undefined;
+
+        case "CallExpression":
+            if (node.callee.type !== "Identifier") {
+                return undefined;
+            }
+
+            let currentScope1: Scope | undefined = scope;
+            while (currentScope1) {
+                const functionInfo = currentScope1.functions.get(node.callee.name);
+                if (functionInfo?.returnArray) {
+                    return functionInfo.returnArray;
+                }
+
+                currentScope1 = currentScope1.parent;
+            }
+            return undefined;
+
+        default:
+            return undefined;
+    }
+}
+
+function getBinaryExpressionType(node: Extract<ExpressionNode, { type: "BinaryExpression" }>, scope: Scope): string {
     const leftType = getExpressionType(node.left, scope);
     const rightType = getExpressionType(node.right, scope);
 
@@ -164,9 +242,15 @@ function getBinaryExpressionType(
             if (leftType === "str" || rightType === "str") {
                 return "str";
             }
+
             return "int";
 
         case "-":
+            if (leftType !== "int" || rightType !== "int") {
+                throw new Error(`${node.operator} 연산은 int 타입만 사용할 수 있습니다.`,);
+            }
+            return "int";
+
         case "*":
             if (leftType === "str" && rightType === "int") {
                 return "str";
@@ -176,16 +260,12 @@ function getBinaryExpressionType(
                 return "int";
             }
 
-            throw new Error(
-                `* 연산을 사용할 수 없는 타입입니다: ${leftType} * ${rightType}`,
-            );
+            throw new Error(`* 연산을 사용할 수 없는 타입입니다: ${leftType} * ${rightType}`,);
+
         case "/":
             if (leftType !== "int" || rightType !== "int") {
-                throw new Error(
-                    `${node.operator} 연산은 int 타입만 사용할 수 있습니다.`,
-                );
+                throw new Error(`${node.operator} 연산은 int 타입만 사용할 수 있습니다.`,);
             }
-
             return "int";
 
         case "<":
@@ -195,14 +275,13 @@ function getBinaryExpressionType(
         case "==":
         case "!=":
             if (leftType !== "dynamic" && rightType !== "dynamic" && leftType !== rightType) {
-                throw new Error(
-                    `비교할 수 없는 타입입니다: ${leftType} ${node.operator} ${rightType}`,
-                );
+                throw new Error(`비교할 수 없는 타입입니다: ${leftType} ${node.operator} ${rightType}`,);
             }
 
             return "bool";
 
         default:
             throw new Error(`알 수 없는 연산자입니다: ${node.operator}`);
+
     }
 }

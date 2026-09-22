@@ -1,16 +1,16 @@
-import type { ArrayLiteralNode, ReturnStatementNode } from "../../ast/node";
+import type { ReturnStatementNode } from "../../ast/node";
 import type { Scope } from "../main";
-import { getExpressionType } from "../util/expression";
+import { getArrayInfo, getExpressionType } from "../util/expression";
 
 export function validateReturn(node: ReturnStatementNode, scope: Scope): void {
     let currentScope: Scope | undefined = scope;
     let functionReturnType: string | undefined;
-    let functionReturnArrayLength: number | undefined;
+    let functionReturnArray;
 
     while (currentScope) {
         if (currentScope.functionReturnType) {
             functionReturnType = currentScope.functionReturnType;
-            functionReturnArrayLength = currentScope.functionReturnArrayLength;
+            functionReturnArray = currentScope.functionReturnArray;
             break;
         }
 
@@ -27,59 +27,53 @@ export function validateReturn(node: ReturnStatementNode, scope: Scope): void {
 
     if (!node.value) {
         throw new Error(
-            `반환값이 필요합니다: ${functionReturnType}`
+            `반환값이 필요합니다: ${functionReturnArray ? `${functionReturnType}[]` : functionReturnType}`,
         );
     }
 
-    const actualType = getReturnValueType(node.value, scope);
+    if (functionReturnArray) {
+        const actualArray = getArrayInfo(node.value, scope);
+
+        if (!actualArray) {
+            throw new Error(
+                `반환값은 배열이어야 합니다: ${functionReturnType}[]`,
+            );
+        }
+
+        if (
+            functionReturnArray.elementType &&
+            functionReturnArray.elementType !== "dynamic" &&
+            actualArray.elementType !== "dynamic" &&
+            functionReturnArray.elementType !== actualArray.elementType
+        ) {
+            throw new Error(
+                `반환 배열의 타입이 일치하지 않습니다: ${functionReturnType}[] ← ${actualArray.elementType}[]`,
+            );
+        }
+
+        if (
+            functionReturnArray.length !== undefined &&
+            actualArray.initializedLength !== undefined &&
+            actualArray.initializedLength > functionReturnArray.length
+        ) {
+            throw new Error(
+                `반환 배열의 크기가 범위를 벗어났습니다: ${actualArray.initializedLength} (최대 ${functionReturnArray.length})`,
+            );
+        }
+
+        functionReturnArray.initializedLength = actualArray.initializedLength;
+        return;
+    }
+
+    const actualType = getExpressionType(node.value, scope);
 
     if (
-        actualType !== "dynamic" &&
         functionReturnType !== "dynamic" &&
+        actualType !== "dynamic" &&
         actualType !== functionReturnType
     ) {
         throw new Error(
-            `반환값의 타입이 일치하지 않습니다: ${functionReturnType} ← ${actualType}`
+            `반환값의 타입이 일치하지 않습니다: ${functionReturnType} ← ${actualType}`,
         );
     }
-
-    if (
-        functionReturnArrayLength !== undefined &&
-        node.value.type === "ArrayLiteral" &&
-        node.value.elements.length > functionReturnArrayLength
-    ) {
-        throw new Error(
-            `반환 배열의 크기가 범위를 벗어났습니다: ${node.value.elements.length} (최대 ${functionReturnArrayLength})`
-        );
-    }
-}
-
-function getReturnValueType(node: ReturnStatementNode["value"], scope: Scope): string {
-    if (!node) {
-        return "void";
-    }
-
-    if (node.type !== "ArrayLiteral") {
-        return getExpressionType(node, scope);
-    }
-
-    return getArrayLiteralType(node, scope);
-}
-
-function getArrayLiteralType(node: ArrayLiteralNode, scope: Scope): string {
-    if (node.elements.length === 0) {
-        return "dynamic[]";
-    }
-
-    const firstType = getExpressionType(node.elements[0], scope);
-
-    for (const element of node.elements) {
-        const elementType = getExpressionType(element, scope);
-
-        if (elementType !== firstType) {
-            return "dynamic[]";
-        }
-    }
-
-    return `${firstType}[]`;
 }

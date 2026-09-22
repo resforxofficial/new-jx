@@ -111,6 +111,7 @@ export interface ArrayLiteralNode {
 export interface ArrayTypeNode {
     elementType?: string;
     length?: number;
+    initializedLength?: number;
 }
 
 export interface IndexExpressionNode {

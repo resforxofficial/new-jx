@@ -7,11 +7,11 @@ export function validateFunction(node: FunctionDeclarationNode, scope: Scope): v
         declared: new Map(),
         mutable: new Set(),
         initialized: new Set(),
-        arrayLength: new Map(),
+        arrays: new Map(),
         functions: scope.functions,
         parent: scope,
-        functionReturnType: node.returnArray ? `${node.returnType}[]` : node.returnType,
-        functionReturnArrayLength: node.returnArray?.length,
+        functionReturnType: node.returnType,
+        functionReturnArray: node.returnArray,
         loopDepth: 0,
     };
 
@@ -29,7 +29,7 @@ export function validateFunction(node: FunctionDeclarationNode, scope: Scope): v
         functionScope.initialized.add(parameter.name);
 
         if (parameter.array) {
-            functionScope.arrayLength.set(parameter.name, parameter.array.length);
+            functionScope.arrays.set(parameter.name, parameter.array);
         }
     }
 

@@ -1,6 +1,6 @@
-import type { VariableDeclarationNode } from "../ast/node";
+import type { VariableDeclarationNode, ArrayTypeNode } from "../ast/node";
 import type { Scope } from "./main";
-import { getExpressionType } from "./util/expression";
+import { getExpressionType, getArrayInfo } from "./util/expression";
 
 export function validateVariable(
     node: VariableDeclarationNode,
@@ -15,6 +15,8 @@ export function validateVariable(
     }
 
     if (node.array) {
+        let arrayInfo: ArrayTypeNode;
+
         if (node.value.type === "ArrayLiteral") {
             const elements = node.value.elements;
 
@@ -52,39 +54,66 @@ export function validateVariable(
                 }
             }
 
-            elementType ??= "dynamic";
+            const resolvedElementType = elementType ?? "dynamic";
 
             node.array.elementType = elementType;
-            scope.declared.set(node.name, `${elementType}[]`);
-        } else {
-            const actualType = getExpressionType(node.value, scope);
+            node.array.initializedLength = elements.length;
 
-            if (!actualType.endsWith("[]")) {
+            arrayInfo = {
+                elementType: resolvedElementType,
+                length: node.array.length,
+                initializedLength: elements.length,
+            };
+        } else {
+            const actualInfo = getArrayInfo(node.value, scope);
+
+            if (!actualInfo) {
                 throw new Error(
-                    `배열 타입의 값이 필요합니다: ${node.name} (${actualType})`,
+                    `배열 타입의 값이 필요합니다: ${node.name}`,
                 );
             }
-
-            const actualElementType = actualType.slice(0, -2);
 
             if (
                 node.array.elementType &&
                 node.array.elementType !== "dynamic" &&
-                actualElementType !== "dynamic" &&
-                node.array.elementType !== actualElementType
+                actualInfo.elementType !== "dynamic" &&
+                node.array.elementType !== actualInfo.elementType
             ) {
                 throw new Error(
-                    `배열 타입이 일치하지 않습니다: ${node.name} (${node.array.elementType}[] ← ${actualType})`,
+                    `배열 타입이 일치하지 않습니다: ${node.name} (${node.array.elementType}[] ← ${actualInfo.elementType}[])`,
                 );
             }
 
-            node.array.elementType = node.array.elementType ?? actualElementType;
-            scope.declared.set(node.name, actualType);
+            if (
+                node.array.length !== undefined &&
+                actualInfo.initializedLength !== undefined &&
+                actualInfo.initializedLength > node.array.length
+            ) {
+                throw new Error(
+                    `배열 크기를 초과했습니다: ${node.name} (${node.array.length} ← ${actualInfo.initializedLength})`,
+                );
+            }
+
+            const resolvedElementType =
+                node.array.elementType ?? actualInfo.elementType;
+
+            node.array.elementType = node.array.elementType ?? (
+                actualInfo.elementType === "dynamic"
+                    ? undefined
+                    : actualInfo.elementType
+            );
+
+            node.array.initializedLength = actualInfo.initializedLength;
+
+            arrayInfo = {
+                elementType: resolvedElementType,
+                length: node.array.length,
+                initializedLength: actualInfo.initializedLength,
+            };
         }
 
-        if (node.array.length !== undefined) {
-            scope.arrayLength.set(node.name, node.array.length);
-        }
+        scope.declared.set(node.name, `${arrayInfo.elementType}[]`);
+        scope.arrays.set(node.name, arrayInfo);
 
         if (node.mutable) {
             scope.mutable.add(node.name);

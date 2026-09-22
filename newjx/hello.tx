@@ -1,5 +1,1 @@
-block int[5] makeNumbers() {
-    return { 1, 2, 3 };
-}
-
-mut int[4] nums = makeNumbers();
+block findElementByIndex()

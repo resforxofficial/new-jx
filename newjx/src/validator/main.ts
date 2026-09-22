@@ -1,11 +1,13 @@
-import type { ASTNode } from "../ast/node";
+import type { ASTNode, ArrayTypeNode } from "../ast/node";
 import { validateNode } from "./node";
 
 export interface FunctionInfo {
     returnType: string;
+    returnArray?: ArrayTypeNode;
     parameters: {
         type: string;
         name: string;
+        array?: ArrayTypeNode;
     }[];
 }
 
@@ -13,10 +15,10 @@ export interface Scope {
     declared: Map<string, string>;
     mutable: Set<string>;
     initialized: Set<string>;
-    arrayLength: Map<string, number | undefined>;
+    arrays: Map<string, ArrayTypeNode>;
     parent?: Scope;
     functionReturnType?: string;
-    functionReturnArrayLength?: number;
+    functionReturnArray?: ArrayTypeNode;
     functions: Map<string, FunctionInfo>;
     loopDepth: number;
 }
@@ -26,7 +28,7 @@ export function validate(ast: ASTNode[]): void {
         declared: new Map(),
         mutable: new Set(),
         initialized: new Set(),
-        arrayLength: new Map(),
+        arrays: new Map(),
         functions: new Map(),
         loopDepth: 0,
     };
@@ -38,14 +40,12 @@ export function validate(ast: ASTNode[]): void {
             }
 
             scope.functions.set(node.name, {
-                returnType: node.returnArray
-                    ? `${node.returnType}[]`
-                    : node.returnType,
-                parameters: node.parameters.map(parameter => ({
-                    type: parameter.array
-                        ? `${parameter.type}[]`
-                        : parameter.type,
-                    name: parameter.name,
+                returnType: node.returnType,
+                returnArray: node.returnArray,
+                parameters: node.parameters.map(param => ({
+                    type: param.type,
+                    name: param.name,
+                    array: param.array,
                 })),
             });
         }
