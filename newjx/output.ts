@@ -1,3 +1,1 @@
-function test(a: number, b: number): number {
-return a + a;
-}
+console.log(1);

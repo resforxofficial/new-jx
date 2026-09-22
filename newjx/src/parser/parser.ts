@@ -20,6 +20,7 @@ import {
     parseFunction,
     parseReturn,
 } from "./default";
+import { ExpressionStatementNode } from '../ast/node';
 
 export class Parser {
     private current = 0;
@@ -80,13 +81,14 @@ export class Parser {
 
         if (token.type === "Identifier") {
             if (this.peek(1)?.type === "ParenOpen") {
-                const expression1 = this.parseExpression();
+                const expression: ExpressionStatementNode = {
+                    type: "ExpressionStatement",
+                    expression: this.parseExpression(),
+                };
+
                 this.expect("Punctuation", ";");
 
-                return {
-                    type: "ExpressionStatement",
-                    expression: expression1,
-                };
+                return expression;
             }
 
             return parseAssignment(this);

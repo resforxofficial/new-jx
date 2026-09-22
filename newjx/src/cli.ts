@@ -23,7 +23,7 @@ const needsInput = hasInput(ast);
 let output = transform(ast);
 
 if (needsInput) {
-    output = `import { input, parseInput } from "./src/runtime/input";\n\n${output}`;
+    output = `import { input, parseInput, expectInt } from "./src/runtime/input";\n\n${output}`;
 }
 
 const outputPath = path.resolve('./output.ts');

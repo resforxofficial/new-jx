@@ -20,7 +20,7 @@ export function transformExpression(node: ExpressionNode): string {
             return `[${node.elements.map(element => transformExpression(element)).join(", ")}]`;
 
         case "IndexExpression":
-            return `${transformExpression(node.target)}[${transformExpression(node.index)}]`;
+            return `${transformExpression(node.target)}[expectInt(${transformExpression(node.index)})]`;
 
         case "TernaryExpression":
             return `(${transformExpression(node.condition)} ? ${transformExpression(node.consequent)} : ${transformExpression(node.alternate)})`;
