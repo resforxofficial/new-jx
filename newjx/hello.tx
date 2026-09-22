@@ -1,1 +1,14 @@
-out 1;
+mut a = input "input number: ";
+mut []b = {1, 2, 3};
+
+if (a == 1) {
+    mut c = input "number: ";
+    out b[c];
+}
+
+else {
+    mut d = input "number: ";
+    mut e = input "what u want to put in this array: ";
+    b[d] = e;
+    out b;
+}

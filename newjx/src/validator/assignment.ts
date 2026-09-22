@@ -121,7 +121,7 @@ export function validateAssignment(node: AssignmentNode, scope: Scope): void {
             throw new Error(`배열이 아닌 값은 인덱싱할 수 없습니다: ${arrayType}`);
         }
 
-        if (indexType !== "int") {
+        if (indexType !== "int" && indexType !== "dynamic") {
             throw new Error(`배열 인덱스는 int 타입이어야 합니다: ${indexType}`);
         }
 
