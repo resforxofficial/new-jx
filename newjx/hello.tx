@@ -1,14 +1,20 @@
-mut a = input "input number: ";
-mut []b = {1, 2, 3};
+block bool contains(int[] nums, int target) {
+    // 여기를 직접 작성
+    mut bool istrue = false;
+    for(n: nums) {
+        out n, target, n == target;
 
-if (a == 1) {
-    mut c = input "number: ";
-    out b[c];
+        if (n == target) {
+            istrue = true;
+        }
+        else {
+            istrue = false;
+        }
+    }
+    return istrue;
 }
 
-else {
-    mut d = input "number: ";
-    mut e = input "what u want to put in this array: ";
-    b[d] = e;
-    out b;
-}
+mut int target = input "찾을 숫자: ";
+mut int[] nums = {1, 4, 7, 10, 20};
+
+out contains(nums, target);

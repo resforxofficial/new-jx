@@ -1,13 +1,19 @@
-import { input, parseInput, expectInt } from "./src/runtime/input";
+import { input, parseInput } from "./src/runtime/input";
 
-let a: any = parseInput(input("input number: "));
-let b: number[] = [1, 2, 3];
-if (a == 1) {
-    let c: any = parseInput(input("number: "));
-    console.log(b[expectInt(c)]);
+import {expectInt} from "./src/runtime/types";
+
+function contains(nums: number[], target: number): boolean {
+let istrue: boolean = false;
+for (const n of nums) {
+console.log(n, target, n == target);
+if (n == target) {
+istrue = true;
 } else {
-    let d: any = parseInput(input("number: "));
-    let e: any = parseInput(input("what u want to put in this array: "));
-    b[expectInt(d)] = e;
-    console.log(b);
+istrue = false;
 }
+}
+return istrue;
+}
+let target: number = Number(input("찾을 숫자: "));
+let nums: number[] = [1, 4, 7, 10, 20];
+console.log(contains(nums, target));

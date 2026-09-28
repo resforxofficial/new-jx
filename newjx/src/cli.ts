@@ -21,9 +21,14 @@ validate(ast);
 
 const needsInput = hasInput(ast);
 let output = transform(ast);
+output = `import {expectInt} from "./src/runtime/types";\n\n${output}`;
 
-if (needsInput) {
-    output = `import { input, parseInput, expectInt } from "./src/runtime/input";\n\n${output}`;
+if (needsInput && output.includes("expectInt")) {
+    output = `import { input, parseInput } from "./src/runtime/input";\n\n${output}`;
+}
+
+else {
+    output = `import {expectInt} from "./src/runtime/types";\nimport { input, parseInput } from "./src/runtime/input";\n\n${output}`;
 }
 
 const outputPath = path.resolve('./output.ts');

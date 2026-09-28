@@ -48,7 +48,7 @@ export function validateAssignment(node: AssignmentNode, scope: Scope): void {
 
         const isInput = node.value.type === "InputExpression";
         const actualType = getExpressionType(node.value, scope);
-        const targetArray = findArrayInfo(name, scope);
+        const targetArray = declaredType?.endsWith("[]") ? findArrayInfo(name, scope) : undefined;
 
         if (targetArray && node.operator === "=" && !isInput) {
             const sourceArray = getArrayInfo(node.value, scope);
