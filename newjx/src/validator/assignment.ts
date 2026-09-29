@@ -76,7 +76,7 @@ export function validateAssignment(node: AssignmentNode, scope: Scope): void {
 
         if (node.operator !== "=" && !isInput) {
             if (node.operator === "+=") {
-                if (declaredType !== "int" && declaredType !== "str") {
+                if (declaredType !== "int" && declaredType !== "str" && actualType !== "dym" && declaredType !== "dym") {
                     throw new Error(
                         `+= 연산을 사용할 수 없는 타입입니다: ${declaredType}`,
                     );
