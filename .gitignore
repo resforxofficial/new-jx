@@ -12,3 +12,5 @@ Thumbs.db
 
 coverage/
 ignorefile.txt
+
+/.vscode
