@@ -12,7 +12,7 @@ export const KEYWORDS = new Set([
     "return",
 ]);
 
-export const TYPES = new Set(["int", "str", "bool", "void"]);
+export const TYPES = new Set(["int", "str", "bool", "void", "dym"]);
 
 export const BOOLEANS = new Set(["true", "false"]);
 

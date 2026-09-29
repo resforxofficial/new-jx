@@ -127,7 +127,7 @@ export function validateVariable(
     const isInput = node.value.type === "InputExpression";
     const actualType = getExpressionType(node.value, scope);
 
-    if (!isInput && node.varType && node.varType !== actualType) {
+    if (!isInput && node.varType && node.varType !== actualType && node.varType !== "dym" && actualType !== "dym") {
         throw new Error(
             `변수 타입이 일치하지 않습니다: ${node.name} (${node.varType} ← ${actualType})`,
         );

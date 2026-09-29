@@ -1,20 +1,7 @@
-block bool contains(int[] nums, int target) {
-    // 여기를 직접 작성
-    mut bool istrue = false;
-    for(n: nums) {
-        out n, target, n == target;
+mut dym a = 10;
+mut dym b = "hello";
+mut dym c = true;
 
-        if (n == target) {
-            istrue = true;
-        }
-        else {
-            istrue = false;
-        }
-    }
-    return istrue;
-}
-
-mut int target = input "찾을 숫자: ";
-mut int[] nums = {1, 4, 7, 10, 20};
-
-out contains(nums, target);
+mut int x = a;
+mut str y = b;
+mut bool z = c;

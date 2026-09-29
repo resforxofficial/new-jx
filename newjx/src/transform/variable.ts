@@ -6,6 +6,7 @@ const typeMap: Record<string, string> = {
     int: "number",
     str: "string",
     bool: "boolean",
+    dym: "any",
 };
 
 export function transformVariable(node: VariableDeclarationNode, scope: TransformScope): string {
