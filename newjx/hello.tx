@@ -4,4 +4,4 @@ mut dym c = true;
 
 mut int x = a;
 mut str y = b;
-mut bool z = c;
+mut bool z = c;ddd
