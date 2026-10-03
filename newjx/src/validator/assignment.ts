@@ -82,19 +82,19 @@ export function validateAssignment(node: AssignmentNode, scope: Scope): void {
                     );
                 }
 
-                if (actualType !== "dynamic" && actualType !== declaredType) {
+                if (actualType !== "dynamic" && actualType !== declaredType && actualType !== "dym" && declaredType !== "dym") {
                     throw new Error(
                         `+= 연산의 타입이 일치하지 않습니다: ${declaredType} += ${actualType}`,
                     );
                 }
             } else {
-                if (declaredType !== "int") {
+                if (declaredType !== "int" && declaredType !== "dym") {
                     throw new Error(
                         `${node.operator} 연산을 사용할 수 없는 타입입니다: ${declaredType}`,
                     );
                 }
 
-                if (actualType !== "dynamic" && actualType !== "int") {
+                if (actualType !== "dynamic" && actualType !== "int" && declaredType !== "dym" && actualType !== "dym") {
                     throw new Error(
                         `${node.operator} 연산의 타입이 일치하지 않습니다: ${declaredType} ${node.operator} ${actualType}`,
                     );
@@ -121,7 +121,7 @@ export function validateAssignment(node: AssignmentNode, scope: Scope): void {
             throw new Error(`배열이 아닌 값은 인덱싱할 수 없습니다: ${arrayType}`);
         }
 
-        if (indexType !== "int" && indexType !== "dynamic") {
+        if (indexType !== "int" && indexType !== "dynamic" && indexType !== "dym") {
             throw new Error(`배열 인덱스는 int 타입이어야 합니다: ${indexType}`);
         }
 
