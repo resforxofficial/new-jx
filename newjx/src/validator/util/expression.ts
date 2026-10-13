@@ -37,15 +37,15 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
 
         case "TernaryExpression":
             const conditionType = getExpressionType(node.condition, scope);
-            if (conditionType !== "bool" && conditionType !== "dynamic") {
+            if (conditionType !== "bool" && conditionType !== "dynamic" && conditionType !== "dym") {
                 throw new Error(`삼항 연산자의 조건은 bool 타입이어야 합니다: ${conditionType}`);
             }
 
             const consequentType = getExpressionType(node.consequent, scope);
             const alternateType = getExpressionType(node.alternate, scope);
 
-            if (consequentType === "dynamic" || alternateType === "dynamic") {
-                return "dynamic";
+            if (consequentType === "dynamic" || alternateType === "dynamic" || consequentType === "dym" || alternateType === "dym") {
+                return consequentType === "dym" || alternateType === "dym" ? "dym" : "dynamic";
             }
 
             if (consequentType !== alternateType) {
@@ -62,7 +62,7 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
                 throw new Error(`배열이 아닌 값은 인덱싱할 수 없습니다: ${targetType}`);
             }
 
-            if (indexType !== "int" && indexType !== "dynamic") {
+            if (indexType !== "int" && indexType !== "dynamic" && indexType !== "dym") {
                 throw new Error(`배열 인덱스는 int 타입이어야 합니다: ${indexType}`);
             }
 
@@ -72,14 +72,18 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
             const operandType = getExpressionType(node.operand, scope);
 
             if (node.operator === "!") {
-                if (operandType !== "bool" && operandType !== "dynamic") {
+                if (operandType !== "bool" && operandType !== "dynamic" && operandType !== "dym") {
                     throw new Error(`! 연산자는 bool 타입만 사용할 수 있습니다: ${operandType}`);
+                }
+
+                if (operandType === "dym") {
+                    return "dym";
                 }
 
                 return "bool";
             }
 
-            if (operandType !== "int" && operandType !== "dynamic") {
+            if (operandType !== "int" && operandType !== "dynamic" && operandType !== "dym") {
                 throw new Error(`${node.operator} 연산자는 int 타입만 사용할 수 있습니다: ${operandType}`);
             }
 
@@ -141,6 +145,7 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
 
                     if (parameter.array.elementType && parameter.array.elementType !== "dynamic" &&
                         actualArray.elementType !== "dynamic" && parameter.array.elementType !== actualArray.elementType
+                        && parameter.array.elementType !== "dym" && actualArray.elementType !== "dym"
                     ) {
                         throw new Error(`함수 배열 인자의 타입이 일치하지 않습니다: ${name}
                             (${parameter.array.elementType}[] ← ${actualArray.elementType}[])`,);
@@ -159,7 +164,7 @@ export function getExpressionType(node: ExpressionNode, scope: Scope): string {
                 const actualType = getExpressionType(argument, scope);
                 const expectedType = parameter.type;
 
-                if (actualType !== "dynamic" && expectedType !== "dynamic" && actualType !== expectedType) {
+                if (!isTypeCompatible(actualType, expectedType)) {
                     throw new Error(`함수 인자의 타입이 일치하지 않습니다: ${name} (${expectedType} ← ${actualType})`,);
                 }
             }
@@ -231,6 +236,10 @@ function getBinaryExpressionType(node: Extract<ExpressionNode, { type: "BinaryEx
 
     switch (node.operator) {
         case "+":
+            if (leftType === "dym" || rightType === "dym") {
+                return "dym";
+            }
+
             if (leftType === "bool" || rightType === "bool") {
                 throw new Error(`+ 연산에는 bool 타입을 사용할 수 없습니다.`);
             }
@@ -246,12 +255,24 @@ function getBinaryExpressionType(node: Extract<ExpressionNode, { type: "BinaryEx
             return "int";
 
         case "-":
+            if (leftType === "dym" || rightType === "dym") {
+                return "dym";
+            }
+
+            if (leftType === "dynamic" || rightType === "dynamic") {
+                return "dynamic";
+            }
+
             if (leftType !== "int" || rightType !== "int") {
                 throw new Error(`${node.operator} 연산은 int 타입만 사용할 수 있습니다.`,);
             }
             return "int";
 
         case "*":
+            if (leftType === "dym" || rightType === "dym") {
+                return "dym";
+            }
+
             if (leftType === "str" && rightType === "int") {
                 return "str";
             }
@@ -263,6 +284,10 @@ function getBinaryExpressionType(node: Extract<ExpressionNode, { type: "BinaryEx
             throw new Error(`* 연산을 사용할 수 없는 타입입니다: ${leftType} * ${rightType}`,);
 
         case "/":
+            if (leftType === "dym" || rightType === "dym") {
+                return "dym";
+            }
+
             if (leftType !== "int" || rightType !== "int") {
                 throw new Error(`${node.operator} 연산은 int 타입만 사용할 수 있습니다.`,);
             }
@@ -274,7 +299,7 @@ function getBinaryExpressionType(node: Extract<ExpressionNode, { type: "BinaryEx
         case ">=":
         case "==":
         case "!=":
-            if (leftType !== "dynamic" && rightType !== "dynamic" && leftType !== rightType) {
+            if (leftType !== "dynamic" && leftType !== "dym" && rightType !== "dynamic" && rightType !== "dym" && leftType !== rightType) {
                 throw new Error(`비교할 수 없는 타입입니다: ${leftType} ${node.operator} ${rightType}`,);
             }
 
@@ -284,4 +309,30 @@ function getBinaryExpressionType(node: Extract<ExpressionNode, { type: "BinaryEx
             throw new Error(`알 수 없는 연산자입니다: ${node.operator}`);
 
     }
+}
+
+function isTypeCompatible(actualType: string, expectedType: string): boolean {
+    if (
+        actualType === "dynamic" ||
+        actualType === "dym" ||
+        expectedType === "dynamic" ||
+        expectedType === "dym"
+    ) {
+        return true;
+    }
+
+    if (actualType.endsWith("[]") && expectedType.endsWith("[]")) {
+        const actualElementType = actualType.slice(0, -2);
+        const expectedElementType = expectedType.slice(0, -2);
+
+        return (
+            actualElementType === "dynamic" ||
+            actualElementType === "dym" ||
+            expectedElementType === "dynamic" ||
+            expectedElementType === "dym" ||
+            actualElementType === expectedElementType
+        );
+    }
+
+    return actualType === expectedType;
 }

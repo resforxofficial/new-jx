@@ -41,7 +41,7 @@ export function validateVariable(
                 for (const element of elements) {
                     const actualType = getExpressionType(element, scope);
 
-                    if (elementType !== "dynamic" && actualType !== elementType) {
+                    if (elementType !== "dynamic" && actualType !== elementType && elementType !== "dym") {
                         if (!node.array.elementType) {
                             elementType = "dynamic";
                             break;

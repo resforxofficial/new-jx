@@ -3,9 +3,12 @@ import { input, parseInput } from "./src/runtime/input";
 
 import {expectInt} from "./src/runtime/types";
 
-let a: any = 10;
-let b: any = "hello";
-let c: any = true;
-let x: number = a;
-let y: string = b;
-let z: boolean = c;
+function test1(a: dym): number {
+return a;
+}
+function test2(a: number): dym {
+return a;
+}
+let x: any = 10;
+console.log(test1(x));
+console.log(test2(20));

@@ -69,7 +69,9 @@ export function validateReturn(node: ReturnStatementNode, scope: Scope): void {
 
     if (
         functionReturnType !== "dynamic" &&
+        functionReturnType !== "dym" &&
         actualType !== "dynamic" &&
+        actualType !== "dym" &&
         actualType !== functionReturnType
     ) {
         throw new Error(

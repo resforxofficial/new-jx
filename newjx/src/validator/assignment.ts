@@ -154,7 +154,9 @@ export function validateAssignment(node: AssignmentNode, scope: Scope): void {
         if (node.operator === "=") {
             if (
                 valueType !== "dynamic" &&
+                valueType !== "dym" &&
                 elementType !== "dynamic" &&
+                elementType !== "dym" &&
                 valueType !== elementType
             ) {
                 throw new Error(
@@ -162,25 +164,25 @@ export function validateAssignment(node: AssignmentNode, scope: Scope): void {
                 );
             }
         } else if (node.operator === "+=") {
-            if (elementType !== "int" && elementType !== "str") {
+            if (elementType !== "int" && elementType !== "str" && elementType !== "dym") {
                 throw new Error(
                     `+= 연산을 사용할 수 없는 배열 요소 타입입니다: ${elementType}`,
                 );
             }
 
-            if (valueType !== "dynamic" && valueType !== elementType) {
+            if (valueType !== "dynamic" && valueType !== elementType && valueType !== "dym") {
                 throw new Error(
                     `+= 연산의 타입이 일치하지 않습니다: ${elementType} += ${valueType}`,
                 );
             }
         } else {
-            if (elementType !== "int") {
+            if (elementType !== "int" && elementType !== "dym") {
                 throw new Error(
                     `${node.operator} 연산을 사용할 수 없는 배열 요소 타입입니다: ${elementType}`,
                 );
             }
 
-            if (valueType !== "dynamic" && valueType !== "int") {
+            if (valueType !== "dynamic" && valueType !== "int" && valueType !== "dym") {
                 throw new Error(
                     `${node.operator} 연산의 타입이 일치하지 않습니다: ${elementType} ${node.operator} ${valueType}`,
                 );

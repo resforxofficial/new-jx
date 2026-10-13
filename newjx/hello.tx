@@ -1,7 +1,12 @@
-mut dym a = 10;
-mut dym b = "hello";
-mut dym c = true;
+block int test1(dym a) {
+    return a;
+}
 
-mut int x = a;
-mut str y = b;
-mut bool z = c;ddd
+block dym test2(int a) {
+    return a;
+}
+
+mut dym x = 10;
+
+out test1(x);
+out test2(20);
