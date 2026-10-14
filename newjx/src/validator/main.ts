@@ -16,6 +16,8 @@ export interface Scope {
     mutable: Set<string>;
     initialized: Set<string>;
     arrays: Map<string, ArrayTypeNode>;
+    actualTypes?: Map<string, string>;
+    actualArrays?: Map<string, ArrayTypeNode>;
     parent?: Scope;
     functionReturnType?: string;
     functionReturnArray?: ArrayTypeNode;
